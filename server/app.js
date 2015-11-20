@@ -4,17 +4,11 @@
 
 'use strict';
 
-import express from 'express';
-import mongoose from 'mongoose';
-import config from './config/environment';
-import http from 'http';
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Connect to MongoDB
-mongoose.connect(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-  console.error('MongoDB connection error: ' + err);
-  process.exit(-1);
-});
+var express = require('express');
+var config = require('./config/environment');
+var http = require('http');
 
 // Populate databases with sample data
 if (config.seedDB) { require('./config/seed'); }

@@ -17,6 +17,18 @@ module.exports = {
       }
     }
   },
-
+  sql: {
+    host: 'localhost',
+    dialect: 'postgres',
+    protocol: 'postgres',
+    database: 'weblist',
+    username: 'postgres',
+    password: 'peregrine',
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 10000
+    }
+  },
   seedDB: true
 };

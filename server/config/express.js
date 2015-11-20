@@ -4,22 +4,19 @@
 
 'use strict';
 
-import express from 'express';
-import favicon from 'serve-favicon';
-import morgan from 'morgan';
-import compression from 'compression';
-import bodyParser from 'body-parser';
-import methodOverride from 'method-override';
-import cookieParser from 'cookie-parser';
-import errorHandler from 'errorhandler';
-import path from 'path';
-import lusca from 'lusca';
-import config from './environment';
-import passport from 'passport';
-import session from 'express-session';
-import connectMongo from 'connect-mongo';
-import mongoose from 'mongoose';
-var mongoStore = connectMongo(session);
+var express = require('express');
+var favicon = require('serve-favicon');
+var morgan = require('morgan');
+var compression = require('compression');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var cookieParser = require('cookie-parser');
+var errorHandler = require('errorhandler');
+var path = require('path');
+var config = require('./environment');
+var lusca = require('lusca');
+var passport = require('passport');
+var session = require('express-session');
 
 module.exports = function(app) {
   var env = app.get('env');
@@ -40,11 +37,7 @@ module.exports = function(app) {
   app.use(session({
     secret: config.secrets.session,
     saveUninitialized: true,
-    resave: false,
-    store: new mongoStore({
-      mongooseConnection: mongoose.connection,
-      db: 'weblist'
-    })
+    resave: false
   }));
 
   /**
