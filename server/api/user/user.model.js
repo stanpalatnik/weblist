@@ -16,7 +16,9 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         //User.hasMany(models.Thing)
-      }
+      },
+      validEmail: validEmail,
+      validPassword: validPassword
     },
     paranoid: false,
     instanceMethods: {
@@ -26,11 +28,11 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   User.hook('beforeValidate', function(user, options) {
-    if(!validator.isEmail(user.email)){
+    if(!validEmail(user.email)){
       return sequelize.Promise.reject('Validation Error: Invalid email');
     }
 
-    if(!validator.isAlphanumeric(user.password) || !validator.isLength(user.password, 6)){
+    if(!validPassword(user.password)){
       return sequelize.Promise.reject('Validation Error: Password does not meet requirements');
     }
 
@@ -70,6 +72,17 @@ UserSchema
     };
   });
 */
+
+var validPassword = function(password) {
+  if(!validator.isAlphanumeric(password) || !validator.isLength(password, 6)){
+    return false;
+  }
+  return true;
+};
+
+var validEmail = function(email) {
+  return validator.isEmail(email);
+};
 
 var validatePresenceOf = function(value) {
   return value && value.length;
