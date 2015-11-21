@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
       return sequelize.Promise.reject('Validation Error: Site name is too short');
     }
 
-    return sequelize.Promise.resolve(user);
+    return sequelize.Promise.resolve(pack);
   });
 
   return Pack;

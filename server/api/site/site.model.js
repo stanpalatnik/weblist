@@ -10,7 +10,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        console.log('models: ' + Object.keys(models));
         Site.belongsToMany(models.Pack, {through: 'SitePack'});
       }
     },
@@ -25,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       return sequelize.Promise.reject('Validation Error: Site name is too short');
     }
 
-    return sequelize.Promise.resolve(user);
+    return sequelize.Promise.resolve(site);
   });
 
   return Site;
