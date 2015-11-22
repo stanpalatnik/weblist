@@ -62,19 +62,32 @@ function removeEntity(res) {
 // Gets a list of Sites for this Pack
 exports.index = function(req, res) {
   Models.SitePack.findAll({
-    where: { packId: req.params.packId}
+    where: { packId: req.params.packId},
+    include: [{
+      model: Models.User,
+      where: {id: req.user.id},
+      required: true
+    }]
   })
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
 // Gets a single Site configured with this Pack from the DB
-exports.show = function(req, res) {
+exports.show = function (req, res) {
   Models.SitePack.find({
     where: {
       id: req.params.sitePackId
     },
-    include: [Models.Site]
+    include: [{
+      model: Models.User,
+      where: {id: req.user.id},
+      required: true
+    },
+      {
+        model: Models.Site,
+        required: true
+      }]
   })
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
@@ -90,7 +103,16 @@ exports.create = function(req, res) {
 
 // Updates an existing Site for this Pack in the DB
 exports.update = function(req, res) {
-  Models.SitePack.findById(req.params.sitePackId)
+  Models.SitePack.find({
+    where: {
+      id: req.params.sitePackId
+    },
+    include: [{
+      model: Models.User,
+      where: { id: req.user.id },
+      required: true
+    }]
+  })
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
@@ -99,7 +121,16 @@ exports.update = function(req, res) {
 
 // Deletes a Site from a Pack from the DB
 exports.destroy = function(req, res) {
-  Models.SitePack.findById(req.params.sitePackId)
+  Models.SitePack.find({
+    where: {
+      id: req.params.sitePackId
+    },
+    include: [{
+      model: Models.User,
+      where: { id: req.user.id },
+      required: true
+    }]
+  })
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
