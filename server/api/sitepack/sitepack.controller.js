@@ -1,10 +1,10 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/sites              ->  index
- * POST    /api/sites              ->  create
- * GET     /api/sites/:id          ->  show
- * PUT     /api/sites/:id          ->  update
- * DELETE  /api/sites/:id          ->  destroy
+ * GET     /api/sitepacks              ->  index
+ * POST    /api/sitepacks              ->  create
+ * GET     /api/sitepacks/:id          ->  show
+ * PUT     /api/sitepacks/:id          ->  update
+ * DELETE  /api/sitepacks/:id          ->  destroy
  */
 
 'use strict';
@@ -59,41 +59,48 @@ function removeEntity(res) {
   };
 }
 
-// Gets a list of Sites
+// Gets a list of Sites for this Pack
 exports.index = function(req, res) {
-  Models.Site.findAll()
+  Models.SitePack.findAll({
+    where: { packId: req.params.packId}
+  })
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Gets a single Site from the DB
+// Gets a single Site configured with this Pack from the DB
 exports.show = function(req, res) {
-  Models.Site.findById(req.params.id)
+  Models.SitePack.find({
+    where: {
+      id: req.params.sitePackId
+    },
+    include: [Models.Site]
+  })
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Creates a new Site in the DB
+// Adds a Site to an existing Pack in the DB
 exports.create = function(req, res) {
-  Models.Site.create(req.body)
+  Models.SitePack.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
 
-// Updates an existing Site in the DB
+// Updates an existing Site for this Pack in the DB
 exports.update = function(req, res) {
-  if (req.body._id) {
-    delete req.body._id;
-  }
-  Models.Site.findById(req.params.id)
+  Models.SitePack.findById(req.params.sitePackId)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Deletes a Site from the DB
+// Deletes a Site from a Pack from the DB
 exports.destroy = function(req, res) {
-  //we don't want to expose site deletion from the db
+  Models.SitePack.findById(req.params.sitePackId)
+    .then(handleEntityNotFound(res))
+    .then(removeEntity(res))
+    .catch(handleError(res));
 };
