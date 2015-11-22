@@ -47,32 +47,6 @@ module.exports = function(sequelize, DataTypes) {
   return User;
 };
 
-
-/**
- * Virtuals
- */
-
-/* Public profile information
-UserSchema
-  .virtual('profile')
-  .get(function() {
-    return {
-      'name': this.name,
-      'role': this.role
-    };
-  });
-
-// Non-sensitive info we'll be putting in the token
-UserSchema
-  .virtual('token')
-  .get(function() {
-    return {
-      '_id': this._id,
-      'role': this.role
-    };
-  });
-*/
-
 var validPassword = function(password) {
   if(!validator.isAlphanumeric(password) || !validator.isLength(password, 6)){
     return false;

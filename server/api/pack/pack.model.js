@@ -4,7 +4,7 @@ var validator = require('validator');
 
 module.exports = function(sequelize, DataTypes) {
   var Pack = sequelize.define("Pack", {
-    name    : { type: DataTypes.STRING, allowNull: false },
+    name    : { type: DataTypes.STRING, allowNull: false, unique: true },
     time     : { type: DataTypes.INTEGER, allowNull: false },
     active  : { type: DataTypes.BOOLEAN, defaultValue: true }
   }, {
