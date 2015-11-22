@@ -1,6 +1,6 @@
 'use strict';
 
-import User from './user.model';
+import Models from '../index';
 import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
@@ -42,12 +42,10 @@ exports.index = function(req, res) {
  * Creates a new user
  */
 exports.create = function(req, res, next) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.role = 'user';
-  newUser.saveAsync()
-    .spread(function(user) {
-      var token = jwt.sign({ _id: user._id }, config.secrets.session, {
+  Models.User.create(req.body)
+    .then(function (user, created) {
+      console.log(user);
+      var token = jwt.sign({ _id: created.id }, config.secrets.session, {
         expiresInMinutes: 60 * 5
       });
       res.json({ token: token });
@@ -114,7 +112,7 @@ exports.changePassword = function(req, res, next) {
 exports.me = function(req, res, next) {
   var userId = req.user._id;
 
-  User.findOneAsync({ _id: userId }, '-salt -hashedPassword')
+  Models.User.find( { where: { id : req.user.id } } )
     .then(function(user) { // don't ever give out the password or salt
       if (!user) {
         return res.status(401).end();

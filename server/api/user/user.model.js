@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     paranoid: false,
     instanceMethods: {
-      verifyPassword: authenticate,
+      authenticate: authenticate,
       encryptPassword: encryptPassword
     }
   });
@@ -130,21 +130,32 @@ var makeSalt = function(byteSize, callback) {
 * @return {String}
   * @api public
 */
-var encryptPassword = function( callback) {
+var encryptPassword = function(password, callback) {
   if (!this.password || !this.salt) {
     return null;
   }
 
   var defaultIterations = 10000;
   var defaultKeyLength = 64;
-  var salt = new Buffer(this.salt, 'base64');
 
   if (!callback) {
-    return crypto.pbkdf2Sync(this.password, salt, defaultIterations, defaultKeyLength)
+    return crypto.pbkdf2Sync(this.password, this.salt, defaultIterations, defaultKeyLength)
       .toString('base64');
   }
 
-  return crypto.pbkdf2(this.password, salt, defaultIterations, defaultKeyLength, function(err, key) {
+  return crypto.pbkdf2(this.password, this.salt, defaultIterations, defaultKeyLength, function(err, key) {
+    if (err) {
+      callback(err);
+    }
+    return callback(null, key.toString('base64'));
+  });
+};
+
+var verifyPassword = function(password, salt, callback) {
+  var defaultIterations = 10000;
+  var defaultKeyLength = 64;
+
+  return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, function(err, key) {
     if (err) {
       callback(err);
     }
@@ -153,16 +164,11 @@ var encryptPassword = function( callback) {
 };
 
 var authenticate = function(password, callback) {
-  if (!callback) {
-    return this.password === encryptPassword(password);
-  }
-
   var _this = this;
-  encryptPassword(password, function(err, pwdGen) {
+  verifyPassword(password, this.salt, function(err, pwdGen) {
     if (err) {
       callback(err);
     }
-
     if (_this.password === pwdGen) {
       callback(null, true);
     }

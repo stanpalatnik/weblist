@@ -6,9 +6,7 @@
 'use strict';
 var Models = require('../api/index');
 
-console.log('models: ' + Models);
-
-Models["User"].findOrCreate({
+Models.User.findOrCreate({
   where: {username: "Test_User"},
   defaults: {name: "Test User", password: "password123", email: "johny93@example.com"}
 })

@@ -5,7 +5,7 @@ import config from '../config/environment';
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
-import User from '../api/user/user.model';
+import Models from '../api/index';
 var validateJwt = expressJwt({
   secret: config.secrets.session
 });
@@ -26,7 +26,8 @@ function isAuthenticated() {
     })
     // Attach user to request
     .use(function(req, res, next) {
-      User.findByIdAsync(req.user._id)
+      console.log("user request: " + Object.keys(req.user));
+      Models.User.find( { where: { id : req.user._id } } )
         .then(function(user) {
           if (!user) {
             return res.status(401).end();
