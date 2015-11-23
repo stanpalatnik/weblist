@@ -10,7 +10,7 @@
 'use strict';
 
 var _ = require('lodash');
-var Packsession = require('./packsession.model');
+import Models from '../index';
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -61,14 +61,18 @@ function removeEntity(res) {
 
 // Gets a list of Packsessions
 exports.index = function(req, res) {
-  Packsession.findAsync()
+  Models.Packsession.findAll({
+    where : {
+      PackId: req.params.packId
+    }
+  })
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
 // Gets a single Packsession from the DB
 exports.show = function(req, res) {
-  Packsession.findByIdAsync(req.params.id)
+  Models.Packsession.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -76,7 +80,7 @@ exports.show = function(req, res) {
 
 // Creates a new Packsession in the DB
 exports.create = function(req, res) {
-  Packsession.createAsync(req.body)
+  Models.Packsession.createAsync(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -86,7 +90,7 @@ exports.update = function(req, res) {
   if (req.body._id) {
     delete req.body._id;
   }
-  Packsession.findByIdAsync(req.params.id)
+  Models.Packsession.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
@@ -95,7 +99,7 @@ exports.update = function(req, res) {
 
 // Deletes a Packsession from the DB
 exports.destroy = function(req, res) {
-  Packsession.findByIdAsync(req.params.id)
+  Models.Packsession.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));

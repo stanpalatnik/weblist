@@ -30,5 +30,5 @@ module.exports = {
       idle: 10000
     }
   },
-  seedDB: false
+  seedDB: true
 };
