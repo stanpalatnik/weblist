@@ -11,7 +11,8 @@ module.exports = function(sequelize, DataTypes) {
         models.PackSession.hasOne(models.SessionSite);
         models.SitePack.hasOne(models.SessionSite);
       }
-    }
+    },
+    timestamps: false
   });
 
   return SessionSite;
