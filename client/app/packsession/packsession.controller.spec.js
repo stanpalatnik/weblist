@@ -3,7 +3,7 @@
 describe('Controller: PacksessionCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('weblistApp'));
+  beforeEach(module('weblistSavenub'));
 
   var PacksessionCtrl, scope;
 

@@ -3,7 +3,7 @@
 describe('Directive: siteframe', function () {
 
   // load the directive's module and view
-  beforeEach(module('weblistApp'));
+  beforeEach(module('weblistSavenub'));
   beforeEach(module('app/siteframe/siteframe.html'));
 
   var element, scope;

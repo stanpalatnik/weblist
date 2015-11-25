@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('weblistApp')
+angular.module('weblistSavenub')
   .config(function ($stateProvider) {
     $stateProvider
       .state('pack', {

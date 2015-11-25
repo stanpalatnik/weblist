@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('weblistApp')
+angular.module('weblistSavenub')
   .controller('PacksessionCtrl', function ($scope) {
     $scope.message = 'Hello';
   });

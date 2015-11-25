@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('weblistApp')
+angular.module('weblistSavenub')
   .directive('siteframe', function () {
     return {
       templateUrl: 'app/siteframe/siteframe.html',
