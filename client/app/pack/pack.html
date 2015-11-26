@@ -6,7 +6,7 @@
       <h1>Create a new Pack</h1>
     </div>
     <div class="col-sm-12">
-      <form class="form" name="form" ng-submit="register(form)" novalidate>
+      <form class="form" name="form" ng-submit="createPack(form)" novalidate>
 
         <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted,
                                             'has-error': form.name.$invalid && submitted }">
@@ -22,18 +22,21 @@
         <div class="form-group">
           <label>Description</label>
 
-          <input type="text" name="name" class="form-control" ng-model="pack.description"/>
+          <input type="text" name="description" class="form-control" ng-model="pack.description"/>
         </div>
 
         <div class="form-group" ng-class="{ 'has-success': form.time.$valid && submitted,
                                             'has-error': form.time.$invalid && submitted }">
           <label>Time</label>
 
-          <input type="text" name="name" class="form-control" ng-model="pack.time"
+          <input type="text" name="time" class="form-control" ng-model="pack.time"
                  ng-pattern="numbersOnly"
                  required/>
           <p class="help-block" ng-show="form.time.$error.required && submitted">
             A valid time in minutes is required.
+          </p>
+          <p class="help-block" ng-show="form.time.$error.pattern && submitted">
+            Invalid time input.
           </p>
         </div>
 
@@ -42,9 +45,6 @@
             Create Pack
           </button>
         </div>
-        <p class="help-block" ng-show="form.name.$error.required && form.time.$error.required && submitted">
-          Please enter your email and password.
-        </p>
 
       </form>
     </div>

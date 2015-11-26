@@ -6,6 +6,13 @@ angular.module('weblistSavenub')
       .state('pack', {
         url: '/pack',
         templateUrl: 'app/pack/pack.html',
-        controller: 'PackCtrl'
+        controller: 'PackCtrl',
+        authenticate: true
+      })
+      .state('pack.show', {
+        url: '/:packId',
+        templateUrl: 'app/pack/show.html',
+        controller: 'ShowPackCtrl',
+        authenticate: true
       });
   });

@@ -43,9 +43,9 @@ exports.index = function(req, res) {
  */
 exports.create = function(req, res, next) {
   Models.User.create(req.body)
-    .then(function (user, created) {
-      console.log(user);
-      var token = jwt.sign({ _id: created.id }, config.secrets.session, {
+    .then(function (user) {
+      console.log(user.id);
+      var token = jwt.sign({ _id: user.id }, config.secrets.session, {
         expiresInMinutes: 60 * 5
       });
       res.json({ token: token });

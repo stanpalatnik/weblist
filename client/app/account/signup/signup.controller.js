@@ -16,16 +16,17 @@ angular.module('weblistSavenub')
         })
         .then(function() {
           // Account created, redirect to home
+            console.log("created user");
           $state.go('main');
         })
         .catch(function(err) {
           err = err.data;
           $scope.errors = {};
 
-          // Update validity of form fields that match the mongoose errors
+            // Update validity of form fields that match the mongoose errors
           angular.forEach(err.errors, function(error, field) {
-            form[field].$setValidity('mongoose', false);
-            $scope.errors[field] = error.message;
+            form[error.path].$setValidity('database', false);
+            $scope.errors[error.path] = error.message;
           });
         });
       }

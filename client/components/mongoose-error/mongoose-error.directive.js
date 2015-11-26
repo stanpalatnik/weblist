@@ -4,13 +4,13 @@
  * Removes server error when user updates input
  */
 angular.module('weblistSavenub')
-  .directive('mongooseError', function () {
+  .directive('databaseError', function () {
     return {
       restrict: 'A',
       require: 'ngModel',
       link: function(scope, element, attrs, ngModel) {
         element.on('keydown', function() {
-          return ngModel.$setValidity('mongoose', true);
+          return ngModel.$setValidity('database', true);
         });
       }
     };
