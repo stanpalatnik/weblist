@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .controller('ShowPackCtrl', function ($scope, Pack) {
-    $scope.packId = 0;
-    $scope.pack = Pack.get({id: packId});
+  .controller('ShowPackCtrl', function ($scope, Pack, $stateParams) {
+    console.log('show pack ctrl');
+    $scope.pack = Pack.get({id: $stateParams.packId});
   });

@@ -12,7 +12,7 @@ angular.module('weblistSavenub')
       if (form.$valid) {
         createPackRequest($scope.pack, function(err, pack) {
           if(pack) {
-            $state.go('pack.show', {id : pack.id});
+            $state.go('pack.show', {packId : pack.id});
           }
           else {
             console.log(err);
@@ -28,7 +28,7 @@ angular.module('weblistSavenub')
     var createPackRequest = function(pack, callback) {
       return Pack.save(pack,
         function(data) {
-          return callback(null, pack)
+          return callback(null, data)
         },
         function(err) {
           return callback(err);
