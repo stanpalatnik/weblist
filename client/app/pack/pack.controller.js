@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .controller('PackCtrl', function ($scope, $state) {
+  .controller('PackCtrl', function ($scope, $state, Pack) {
     $scope.numbersOnly = /^\d+$/;
     $scope.pack = {};
     $scope.errors = {};
@@ -10,10 +10,9 @@ angular.module('weblistSavenub')
       $scope.submitted = true;
 
       if (form.$valid) {
-        console.log("creating pack: " + $scope.pack);
         createPackRequest($scope.pack, function(err, pack) {
           if(pack) {
-            $state.go('pack.show');
+            $state.go('pack.show', {id : pack.id});
           }
           else {
             console.log(err);
@@ -27,12 +26,12 @@ angular.module('weblistSavenub')
     };
 
     var createPackRequest = function(pack, callback) {
-      return $http.post('/api/pack', pack)
-        .then(function(pack) {
-          callback(null, pack);
-        })
-        .catch(function(err) {
-          callback(err, null);
-        });
+      return Pack.save(pack,
+        function(data) {
+          return callback(null, pack)
+        },
+        function(err) {
+          return callback(err);
+        }.bind(this)).$promise;
     }
   });

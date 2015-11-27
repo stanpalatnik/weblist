@@ -83,8 +83,7 @@ exports.show = function(req, res) {
 
 // Creates a new Pack in the DB
 exports.create = function(req, res) {
-  req.body.userId = req.user.id;
-  console.log("new pack: " + req.body);
+  req.body.UserId = req.user.id;
   Models.Pack.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));

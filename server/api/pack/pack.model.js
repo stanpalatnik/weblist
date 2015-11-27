@@ -4,14 +4,14 @@ var validator = require('validator');
 
 module.exports = function(sequelize, DataTypes) {
   var Pack = sequelize.define("Pack", {
-    name    : { type: DataTypes.STRING, allowNull: false, unique: true },
+    name    : { type: DataTypes.STRING, allowNull: false },
     description    : { type: DataTypes.STRING, allowNull: true },
     time     : { type: DataTypes.INTEGER, allowNull: false },
     active  : { type: DataTypes.BOOLEAN, defaultValue: true }
   }, {
     classMethods: {
       associate: function(models) {
-        Pack.hasMany(models.PackSession);
+        Pack.hasMany(models.PackSession, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
       }
     },
     paranoid: false

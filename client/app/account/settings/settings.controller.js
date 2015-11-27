@@ -12,7 +12,7 @@ angular.module('weblistSavenub')
             $scope.message = 'Password successfully changed.';
           })
           .catch(function() {
-            form.password.$setValidity('mongoose', false);
+            form.password.$setValidity('database', false);
             $scope.errors.other = 'Incorrect password';
             $scope.message = '';
           });

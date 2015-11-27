@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Site.belongsToMany(models.Pack, {through: 'SitePack'});
+        Site.belongsToMany(models.Pack, {through: 'SitePack', foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
       }
     },
     paranoid: false
