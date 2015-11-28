@@ -91,12 +91,9 @@ exports.create = function(req, res) {
 
 // Updates an existing Pack in the DB
 exports.update = function(req, res) {
-  if (req.body._id) {
-    delete req.body._id;
-  }
   Models.Pack.find({
     where: {
-      id: req.params.id,
+      id: req.body.id,
       UserId: req.user.id
     }
   })

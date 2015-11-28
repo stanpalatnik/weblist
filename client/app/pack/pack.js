@@ -10,20 +10,26 @@ angular.module('weblistSavenub')
       })
       .state('pack.list', {
         url: '/list',
-        templateUrl: 'app/pack/list.html',
+        templateUrl: 'app/pack/templates/list.html',
         controller: 'ListPackCtrl',
         authenticate: true
       })
       .state('pack.new', {
         url: '/new',
-        templateUrl: 'app/pack/pack.html',
+        templateUrl: 'app/pack/templates/create.html',
         controller: 'PackCtrl',
         authenticate: true
       })
       .state('pack.show', {
         url: '/:packId',
-        templateUrl: 'app/pack/show.html',
-        controller: 'ShowPackCtrl',
+        templateUrl: 'app/pack/templates/view.html',
+        controller: 'ViewPackCtrl',
+        authenticate: true
+      })
+      .state('pack.edit', {
+        url: '/edit/:packId',
+        templateUrl: 'app/pack/templates/edit.html',
+        controller: 'EditPackCtrl',
         authenticate: true
       });
   });
