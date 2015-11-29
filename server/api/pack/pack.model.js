@@ -11,7 +11,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Pack.belongsTo(models.User, { foreignKey: {name: "UserId", allowNull: false }, onDelete: 'CASCADE'});
         Pack.hasMany(models.PackSession, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        Pack.belongsToMany(models.Site, {through: "SitePack", foreignKey: {name: "PackId", allowNull: false }, onDelete: 'CASCADE' });
       }
     },
     paranoid: false

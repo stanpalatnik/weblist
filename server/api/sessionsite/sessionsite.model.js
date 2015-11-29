@@ -8,8 +8,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        models.PackSession.hasOne(models.SessionSite, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-        models.SitePack.hasOne(models.SessionSite, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        models.PackSession.hasOne(models.SessionSite, { foreignKey: { name: "PackSessionId", allowNull: false }, onDelete: 'CASCADE' });
+        models.Site.hasOne(models.SessionSite, { foreignKey: { name: "SiteId", allowNull: false }, onDelete: 'CASCADE' });
       }
     },
     timestamps: false

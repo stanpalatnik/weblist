@@ -9,11 +9,7 @@ angular.module('weblistSavenub')
       $scope.submitted = true;
 
       if (form.$valid) {
-        Auth.createUser({
-          name: $scope.user.name,
-          email: $scope.user.email,
-          password: $scope.user.password
-        })
+        Auth.createUser($scope.user)
         .then(function() {
           // Account created, redirect to home
             console.log("created user");

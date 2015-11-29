@@ -15,6 +15,7 @@ import Models from '../index';
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.log(err);
     res.status(statusCode).send(err);
   };
 }
@@ -25,6 +26,7 @@ function responseWithResult(res, statusCode) {
     if (entity) {
       res.status(statusCode).json(entity);
     }
+    return entity;
   };
 }
 
@@ -61,15 +63,22 @@ function removeEntity(res) {
 
 // Gets a list of Sites for this Pack
 exports.index = function(req, res) {
-  Models.SitePack.findAll({
-    where: { packId: req.params.packId},
-    include: [{
+  Models.Pack.findOne({
+    where: { id: req.params.packid},
+    include: [
+    {
+      model: Models.Site,
+      required: true
+    },
+    {
       model: Models.User,
       where: {id: req.user.id},
+      attributes: ['id'],
       required: true
     }]
   })
     .then(responseWithResult(res))
+    .then(handleEntityNotFound(res))
     .catch(handleError(res));
 };
 
@@ -77,7 +86,7 @@ exports.index = function(req, res) {
 exports.show = function (req, res) {
   Models.SitePack.find({
     where: {
-      id: req.params.sitePackId
+      id: req.params.SitePackId
     },
     include: [{
       model: Models.User,

@@ -13,6 +13,7 @@ module.exports = function(app) {
   app.use('/api/packsessions', require('./api/packsession'));
   app.use('/api/packs', require('./api/pack'));
   app.use('/api/sites', require('./api/site'));
+  app.use('/api/sitepacks', require('./api/sitepack'));
   app.use('/api/users', require('./api/user'));
 
   app.use('/auth', require('./auth'));
