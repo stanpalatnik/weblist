@@ -1,0 +1,55 @@
+<navbar></navbar>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Sign up</h1>
+    </div>
+    <div class="col-sm-12">
+      Adding new site to pack {{sitepacks.name}}
+
+      <form class="form" name="form" ng-submit="addSite(form)" novalidate>
+
+        <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted,
+                                            'has-error': form.name.$invalid && submitted }">
+          <label>Site NickName</label>
+
+          <input type="text" name="name" class="form-control" ng-model="site.name"
+                 required/>
+          <p class="help-block" ng-show="form.name.$error.required && submitted">
+            A name is required
+          </p>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-success': form.url.$valid && submitted,
+                                            'has-error': form.url.$invalid && submitted }">
+          <label>Site Url</label>
+
+          <input type="text" name="url" class="form-control" ng-model="site.url"
+                 required
+                 database-error/>
+          <p class="help-block" ng-show="form.url.$error.required && submitted">
+            A site url is required
+          </p>
+          <p class="help-block" ng-show="form.url.$error.database && submitted">
+            This site already exists in this pack.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+
+          <input type="text" name="description" class="form-control" ng-model="site.description"/>
+        </div>
+
+        <div>
+          <button class="btn btn-inverse btn-lg btn-register" type="submit">
+            Add Site
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <hr>
+</div>

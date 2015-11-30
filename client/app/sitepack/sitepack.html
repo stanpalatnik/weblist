@@ -1,6 +1,8 @@
 <div>
   {{ sitepacks }}
-  <ul>
-    <li ng-repeat="site in sitepacks">{{site.name}}</li>
+  <ul ng-if="sitepacks.Sites.length > 0">
+    <li ng-repeat="site in sitepacks">{{site.name}} <a ui-sref="sitepack.delete({packId: sitepacks.id, siteId: site.id})">Home</a></li>
   </ul>
+  <div ng-if="sitepacks.Sites.length == 0">No sites in pack {{sitepacks.name}}</div>
+
 </div>

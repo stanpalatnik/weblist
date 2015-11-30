@@ -68,7 +68,7 @@ exports.index = function(req, res) {
     include: [
     {
       model: Models.Site,
-      required: true
+      required: false
     },
     {
       model: Models.User,
@@ -105,8 +105,22 @@ exports.show = function (req, res) {
 
 // Adds a Site to an existing Pack in the DB
 exports.create = function(req, res) {
-  Models.SitePack.create(req.body)
-    .then(responseWithResult(res, 201))
+  Models.Site.findOrCreate({
+    where: {
+      url: req.body.url
+    },
+    defaults: {
+      name: req.body.name,
+      url: req.body.url,
+      active: true
+    }
+  })
+  .then(function(site){
+      req.body.SiteId = site.id;
+      Models.SitePack.create(req.body)
+        .then(responseWithResult(res, 201))
+        .catch(handleError(res));
+   })
     .catch(handleError(res));
 };
 
