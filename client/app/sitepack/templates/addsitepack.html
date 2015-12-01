@@ -26,10 +26,14 @@
           <label>Site Url</label>
 
           <input type="text" name="url" class="form-control" ng-model="site.url"
+                 valid-domain
                  required
                  database-error/>
           <p class="help-block" ng-show="form.url.$error.required && submitted">
             A site url is required
+          </p>
+          <p class="help-block" ng-show="form.url.$error.fqdn && submitted">
+            Invalid domain name.
           </p>
           <p class="help-block" ng-show="form.url.$error.database && submitted">
             This site already exists in this pack.
@@ -40,6 +44,38 @@
           <label>Description</label>
 
           <input type="text" name="description" class="form-control" ng-model="site.description"/>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-success': form.weight.$valid && submitted,
+                                            'has-error': form.weight.$invalid && submitted }">
+          <label>Site Weight %</label>
+
+          <input type="text" name="weight" class="form-control" ng-model="site.weight"
+                 required
+                 ng-pattern="numbersOnly"
+                 database-error/>
+          <p class="help-block" ng-show="form.weight.$error.required && submitted">
+            A weight % is required
+          </p>
+          <p class="help-block" ng-show="form.weight.$error.database && submitted">
+            Some error about your weight
+          </p>
+        </div>
+
+        <div ng-if="sitepacks.Sites.length > 0" class="form-group" ng-class="{ 'has-success': form.position.$valid && submitted,
+                                            'has-error': form.position.$invalid && submitted }">
+          <label>Site Position %</label>
+
+          <input type="text" name="position" class="form-control" ng-model="site.position"
+                 required
+                 ng
+                 database-error/>
+          <p class="help-block" ng-show="form.position.$error.required && submitted">
+            A position is required
+          </p>
+          <p class="help-block" ng-show="form.position.$error.database && submitted">
+            Some error about your weight
+          </p>
         </div>
 
         <div>

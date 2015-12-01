@@ -20,6 +20,13 @@ function handleError(res, statusCode) {
   };
 }
 
+function validationError(res, statusCode) {
+  statusCode = statusCode || 422;
+  return function(err) {
+    res.status(statusCode).json(err);
+  }
+}
+
 function responseWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -104,7 +111,7 @@ exports.show = function (req, res) {
 };
 
 // Adds a Site to an existing Pack in the DB
-exports.create = function(req, res) {
+exports.create = function (req, res) {
   Models.Site.findOrCreate({
     where: {
       url: req.body.url
@@ -115,13 +122,31 @@ exports.create = function(req, res) {
       active: true
     }
   })
-  .then(function(site){
+    .then(function (site) {
+      console.log("fd" + site.dataValues);
+      console.log(site.values);
+      console.log("siteid: " + site.dataValues.id);
       req.body.SiteId = site.id;
-      Models.SitePack.create(req.body)
-        .then(responseWithResult(res, 201))
+      req.body.position = req.body.position || 1;
+      Models.SitePack.findAll({
+        where: {
+          position: req.body.position
+        }
+      })
+        .then(function (SitePackList) {
+          console.log(SitePackList);
+          if(SitePackList.length > 0) {
+            throw "A site in this position already exists"
+          }
+          else {
+            Models.SitePack.create(req.body)
+              .then(responseWithResult(res, 201))
+              .catch(validationError(res));
+          }
+        })
         .catch(handleError(res));
-   })
-    .catch(handleError(res));
+    })
+    .catch(validationError(res));
 };
 
 // Updates an existing Site for this Pack in the DB

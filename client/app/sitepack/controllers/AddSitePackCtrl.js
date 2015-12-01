@@ -2,6 +2,8 @@
 
 angular.module('weblistSavenub')
   .controller('AddSitePackCtrl', function ($scope, SitePack, $stateParams) {
+    $scope.numbersOnly = /^\d+$/;
+    $scope.errors = {};
     $scope.site = {
       PackId: $stateParams.packId
     };
@@ -14,7 +16,7 @@ angular.module('weblistSavenub')
       $scope.submitted = true;
 
       if (form.$valid) {
-        addSitetoPack($scope.site, function(err, site) {
+        addSiteToPack($scope.site, function(err, site) {
           if(site) {
             $state.go('sitepack.show', {packId : sitepacks.id});
           }
@@ -29,7 +31,7 @@ angular.module('weblistSavenub')
       }
     };
 
-    var addSitetoPack = function(site, callback) {
+    var addSiteToPack = function(site, callback) {
       return SitePack.save(site,
         function(data) {
           return callback(null, data)
