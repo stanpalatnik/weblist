@@ -114,11 +114,10 @@ exports.show = function (req, res) {
 exports.create = function (req, res) {
   Models.Site.findOrCreate({
     where: {
-      url: req.body.url
+      url: req.body.domain
     },
     defaults: {
-      name: req.body.name,
-      url: req.body.url,
+      domain: req.body.domain,
       active: true
     }
   })

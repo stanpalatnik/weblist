@@ -4,8 +4,7 @@ var validator = require('validator');
 
 module.exports = function(sequelize, DataTypes) {
   var Site = sequelize.define("Site", {
-    name    : { type: DataTypes.STRING, allowNull: false },
-    url     : { type: DataTypes.STRING, allowNull: false, unique: true },
+    domain     : { type: DataTypes.STRING, allowNull: false, unique: true },
     active  : { type: DataTypes.BOOLEAN, defaultValue: true }
   }, {
     classMethods: {
