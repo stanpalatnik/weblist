@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .controller('AddSitePackCtrl', function ($scope, SitePack, $stateParams) {
+  .controller('AddSitePackCtrl', function ($scope, SitePack, $stateParams, $state) {
     $scope.numbersOnly = /^\d+$/;
     $scope.errors = {};
     $scope.site = {
@@ -18,7 +18,7 @@ angular.module('weblistSavenub')
       if (form.$valid) {
         addSiteToPack($scope.site, function(err, site) {
           if(site) {
-            $state.go('sitepack.show', {packId : sitepacks.id});
+            $state.go('sitepack.list', {packId : $scope.sitepacks.id});
           }
           else {
             console.log(err);

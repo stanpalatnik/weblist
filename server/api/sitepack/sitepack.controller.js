@@ -23,6 +23,7 @@ function handleError(res, statusCode) {
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
+    console.log(err.stack);
     res.status(statusCode).json(err);
   }
 }
@@ -114,18 +115,19 @@ exports.show = function (req, res) {
 exports.create = function (req, res) {
   Models.Site.findOrCreate({
     where: {
-      url: req.body.domain
+      domain: req.body.domain
     },
     defaults: {
       domain: req.body.domain,
       active: true
     }
   })
-    .then(function (site) {
-      console.log("fd" + site.dataValues);
-      console.log(site.values);
-      console.log("siteid: " + site.dataValues.id);
-      req.body.SiteId = site.id;
+    .spread(function (foundSite, createdSite) {
+      console.log("found: " + foundSite);
+      console.log("created: " + createdSite);
+      if(foundSite) req.body.SiteId = foundSite.id;
+      else req.body.SiteId = createdSite.id;
+      console.log(req.body.SiteId);
       req.body.position = req.body.position || 1;
       Models.SitePack.findAll({
         where: {
@@ -133,17 +135,14 @@ exports.create = function (req, res) {
         }
       })
         .then(function (SitePackList) {
-          console.log(SitePackList);
           if(SitePackList.length > 0) {
             throw "A site in this position already exists"
           }
           else {
             Models.SitePack.create(req.body)
-              .then(responseWithResult(res, 201))
-              .catch(validationError(res));
+              .then(responseWithResult(res, 201));
           }
         })
-        .catch(handleError(res));
     })
     .catch(validationError(res));
 };

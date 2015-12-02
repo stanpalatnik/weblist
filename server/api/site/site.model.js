@@ -16,11 +16,8 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Site.hook('beforeValidate', function(site, options) {
-    if(!validUrl(site.url)){
-      return sequelize.Promise.reject('Validation Error: Invalid url');
-    }
-    if(!validator.isLength(site.name, 2)){
-      return sequelize.Promise.reject('Validation Error: Site name is too short');
+    if(!validUrl(site.domain)){
+      return sequelize.Promise.reject('Validation Error: Invalid domain');
     }
 
     return sequelize.Promise.resolve(site);
