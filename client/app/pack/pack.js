@@ -17,10 +17,10 @@ angular.module('weblistSavenub')
       .state('pack.new', {
         url: '/new',
         templateUrl: 'app/pack/templates/create.html',
-        controller: 'PackCtrl',
+        controller: 'AddPackCtrl',
         authenticate: true
       })
-      .state('pack.show', {
+      .state('pack.view', {
         url: '/:packId',
         templateUrl: 'app/pack/templates/view.html',
         controller: 'ViewPackCtrl',

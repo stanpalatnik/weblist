@@ -18,7 +18,7 @@ angular.module('weblistSavenub')
         templateUrl: 'app/sitepack/templates/addsitepack.html',
         controller: 'AddSitePackCtrl'
       })
-      .state('sitepack.show', {
+      .state('sitepack.view', {
         url: '/:packId/site/view/:siteId',
         templateUrl: 'app/sitepack/sitepack.html',
         controller: 'SitepackCtrl'
