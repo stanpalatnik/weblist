@@ -3,7 +3,7 @@
 <div class="container">
   Pack List
   <ul>
-    <li ng-repeat="pack in packList">{{ pack.name }}</li>
+    <li ng-repeat="pack in packList">{{ pack.name }} <a ui-sref="packsession.create({packId: pack.id })">Start Session</a> </li>
   </ul>
 </div>
 

@@ -59,47 +59,58 @@ function removeEntity(res) {
   };
 }
 
-// Gets a list of Packsessions
+// Gets a list of PackSessions
 exports.index = function(req, res) {
-  Models.Packsession.findAll({
-    where : {
-      PackId: req.params.packId
-    }
+
+  Models.PackSession.findAll({
+    include: [
+      {
+        model: Models.Pack,
+        include : [
+          {
+            model: Models.User,
+            where: { id: req.user.id },
+            required: true
+          }
+        ],
+        required: true
+      }
+    ]
   })
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Gets a single Packsession from the DB
+// Gets a single PackSession from the DB
 exports.show = function(req, res) {
-  Models.Packsession.findByIdAsync(req.params.id)
+  Models.PackSession.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Creates a new Packsession in the DB
+// Creates a new PackSession in the DB
 exports.create = function(req, res) {
-  Models.Packsession.createAsync(req.body)
+  Models.PackSession.createAsync(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
 
-// Updates an existing Packsession in the DB
+// Updates an existing PackSession in the DB
 exports.update = function(req, res) {
   if (req.body._id) {
     delete req.body._id;
   }
-  Models.Packsession.findByIdAsync(req.params.id)
+  Models.PackSession.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
-// Deletes a Packsession from the DB
+// Deletes a PackSession from the DB
 exports.destroy = function(req, res) {
-  Models.Packsession.findByIdAsync(req.params.id)
+  Models.PackSession.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));

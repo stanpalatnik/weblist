@@ -64,7 +64,7 @@
 
         <div ng-if="sitepacks.Sites.length > 0" class="form-group" ng-class="{ 'has-success': form.position.$valid && submitted,
                                             'has-error': form.position.$invalid && submitted }">
-          <label>Site Position %</label>
+          <label>Site Position</label>
 
           <input type="text" name="position" class="form-control" ng-model="site.position" min="1" max="{{sitepacks.Sites.length + 1}}"
                  required
