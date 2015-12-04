@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .controller('ListSitePackCtrl', function ($scope, SitePack, $stateParams) {
+  .controller('EditSitePackCtrl', function ($scope, SitePack, $stateParams) {
     $scope.sitepack = SitePack.get({
       id: $stateParams.packId
     }, function(){

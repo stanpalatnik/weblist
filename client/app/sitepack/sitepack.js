@@ -26,7 +26,7 @@ angular.module('weblistSavenub')
       .state('sitepack.edit', {
         url: '/:packId/site/edit/:siteId',
         templateUrl: 'app/sitepack/sitepack.html',
-        controller: 'SitepackCtrl'
+        controller: 'EditSitePackCtrl'
       })
       .state('sitepack.delete', {
         url: '/:packId/site/:siteId',
