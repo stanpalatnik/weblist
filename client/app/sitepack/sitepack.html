@@ -3,7 +3,8 @@
   <ul ng-if="sitepacks.Sites.length > 0">
     <li ng-repeat="site in sitepacks.Sites">
       {{site.SitePack.name}}
-      <a ui-sref="sitepack.edit({packId: sitepacks.id, siteId: site.SitePack.SiteId})">Edit</a>
+      Session length: {{site.SitePack.allocatedTime}} minutes
+      <a ui-sref="sitepack.edit({packId: sitepacks.id, siteId: site.SitePack.SiteId})">Edit</a> |
       <a ui-sref="sitepack.delete({packId: sitepacks.id, siteId: site.SitePack.SiteId})">Delete</a>
     </li>
   </ul>
