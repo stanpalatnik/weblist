@@ -13,8 +13,8 @@ angular.module('weblistSavenub')
         templateUrl: 'app/packsession/packsession.html',
         controller: 'PacksessionCtrl'
       })
-      .state('packsession.create', {
-        url: '/:packId/start',
+      .state('packsession.view', {
+        url: '/:packId/view',
         templateUrl: 'app/packsession/packsession.html',
         controller: 'PacksessionCtrl'
       });
