@@ -14,12 +14,15 @@ angular.module('weblistSavenub')
     };
 
     var getNextPage = function() {
-      var nextPage = siteList(pageNum);
+      pageNum = pageNum + 1;
+      var nextPage = siteList[pageNum];
       if(nextPage != undefined) {
-        currentSite = siteList[pageNum];
-        pageNum = pageNum++;
+        currentSite = nextPage;
+        return currentSite;
       }
-      return currentSite;
+      else {
+        return null;
+      }
     };
 
     var siteCount = function() {
@@ -31,7 +34,7 @@ angular.module('weblistSavenub')
     };
 
     var setPage = function(page) {
-      if(page > siteCount.length) throw "Page " + page + " does not exit"
+      if(page > siteList.length) throw "Page " + page + " does not exit"
       pageNum = page;
       currentSite = siteList[pageNum];
     };
@@ -40,12 +43,16 @@ angular.module('weblistSavenub')
       return allocatedPackTime;
     };
 
+    var hasNextPage = function() {
+      return pageNum < siteCount() -1;
+    };
 
     return {
       startSession   : startSession,
       getNextPage    : getNextPage,
       siteCount      : siteCount,
       setPage        : setPage,
+      hasNext        : hasNextPage,
       getCurrentPage : getCurrentPage,
       getPackTime    : getPackTime
     }
