@@ -15,7 +15,7 @@ angular.module('weblistSavenub')
       })
       .state('packsession.view', {
         url: '/:packId/view',
-        templateUrl: 'app/packsession/packsession.html',
-        controller: 'PacksessionCtrl'
+        templateUrl: 'app/packsession/templates/view.html',
+        controller: 'CreatePackSessionCtrl'
       });
   });

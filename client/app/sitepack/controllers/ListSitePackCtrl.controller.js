@@ -13,7 +13,14 @@ angular.module('weblistSavenub')
      */
     var calculateTimePerSite = function() {
       var allocated = $scope.sitepack.time;
-      var totalWeight = $scope.sitepack.Sites.reduce( (prevSite, nextSite) => prevSite.SitePack.weight + nextSite.SitePack.weight);
+      var totalWeight;
+      if($scope.sitepack.Sites.length > 1 ) {
+        totalWeight = $scope.sitepack.Sites.reduce( (prevSite, nextSite) => prevSite.SitePack.weight + nextSite.SitePack.weight);
+      }
+      else {
+        totalWeight = $scope.sitepack.Sites[0].SitePack.weight;
+      }
+
       var timePerWeight = allocated / totalWeight;
       $scope.sitepack.Sites =  $scope.sitepack.Sites.map(function(site) {
         site.allocatedTime = site.SitePack.weight * timePerWeight;
