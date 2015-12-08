@@ -2,10 +2,10 @@
 
 angular.module('weblistSavenub')
   .service('PackSessionService', function () {
-    var packId, currentSite, timeSpentOnPage, timeStarted, pageNum, siteList, allocatedPackTime;
+    var pack, currentSite, timeSpentOnPage, timeStarted, pageNum, siteList, allocatedPackTime;
 
-    var startSession = function(_packId, _siteList, _allocatedPackTime) {
-      packId = _packId;
+    var startSession = function(_pack, _siteList, _allocatedPackTime) {
+      pack = _pack;
       siteList = _siteList;
       allocatedPackTime = _allocatedPackTime;
       pageNum = -1;
@@ -39,12 +39,16 @@ angular.module('weblistSavenub')
       currentSite = siteList[pageNum];
     };
 
+    var hasNextPage = function() {
+      return pageNum < siteCount() -1;
+    };
+
     var getPackTime = function() {
       return allocatedPackTime;
     };
 
-    var hasNextPage = function() {
-      return pageNum < siteCount() -1;
+    var getPack = function() {
+      return pack;
     };
 
     return {
@@ -54,6 +58,7 @@ angular.module('weblistSavenub')
       setPage        : setPage,
       hasNext        : hasNextPage,
       getCurrentPage : getCurrentPage,
-      getPackTime    : getPackTime
+      getPackTime    : getPackTime,
+      getPack        : getPack
     }
   });

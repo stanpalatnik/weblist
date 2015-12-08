@@ -28,7 +28,7 @@ angular.module('weblistSavenub')
       $scope.pack = data[0];
       $scope.sitepack = data[1];
       calculateTimePerSite();
-      PackSessionService.startSession($scope.pack.id, $scope.sitepack.Sites, $scope.sitepack.time);
+      PackSessionService.startSession($scope.pack, $scope.sitepack.Sites, $scope.sitepack.time);
     });
 
     /**

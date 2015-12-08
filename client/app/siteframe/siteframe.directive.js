@@ -6,7 +6,7 @@ angular.module('weblistSavenub')
       templateUrl: 'app/siteframe/siteframe.html',
       restrict: 'E',
       controller: function($scope) {
-        this.openSite = function(site) {
+        var openSite = function(site) {
           var sessionTab = window.open("http://" + site.domain);
           var timeOut, intervalID;
           timeOut = setTimeout(function(sessionTab, timeOut, intervalID) {
@@ -17,7 +17,10 @@ angular.module('weblistSavenub')
               sessionTab.close();
               var nextSite = PackSessionService.getNextPage();
               if(nextSite != null) {
-                this.openSite(nextSite);
+                openSite(nextSite);
+              }
+              else {
+                $scope.sessionFinished = true;
               }
             }
           }, $scope.currentSite.allocatedTime*1000 * 60);
@@ -34,8 +37,10 @@ angular.module('weblistSavenub')
         };
       },
       link: function (scope, element, attrs, ctrl) {
+        scope.pack = PackSessionService.getPack();
         var time = PackSessionService.getPackTime();
         scope.manuallyClosed = false;
+        scope.sessionFinished = false;
         scope.siteFinished = false;
         PackSessionService.setPage(0);
         scope.currentSite = PackSessionService.getCurrentPage();
