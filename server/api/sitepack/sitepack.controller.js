@@ -131,7 +131,8 @@ exports.create = function (req, res) {
       req.body.position = req.body.position || 1;
       Models.SitePack.findAll({
         where: {
-          position: req.body.position
+          position : req.body.position,
+          PackId   : req.body.PackId
         }
       })
         .then(function (SitePackList) {
