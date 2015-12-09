@@ -9,7 +9,7 @@ angular.module('weblistSavenub')
         var openSite = function(site) {
           var sessionTab = window.open("http://" + site.domain);
           var timeOut, intervalID;
-          timeOut = setTimeout(function(sessionTab, timeOut, intervalID) {
+          timeOut = setTimeout(function() {
             if(!sessionTab.closed) {
               clearTimeout(timeOut);
               clearInterval(intervalID);
@@ -35,6 +35,7 @@ angular.module('weblistSavenub')
             }
           }, 500); //check to see if window was closed
         };
+        this.openSite =  openSite;
       },
       link: function (scope, element, attrs, ctrl) {
         scope.pack = PackSessionService.getPack();
