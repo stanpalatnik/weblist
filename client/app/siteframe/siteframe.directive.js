@@ -6,8 +6,12 @@ angular.module('weblistSavenub')
       templateUrl: 'app/siteframe/siteframe.html',
       restrict: 'E',
       controller: function($scope) {
+        var sessionTab = null;
         var openSite = function(site) {
-          var sessionTab = window.open("http://" + site.domain);
+          if(sessionTab === null)  {
+            sessionTab = window.open("http://" + site.domain);
+          }
+          else sessionTab.location = "http://" + site.domain;
           var timeOut, intervalID;
           timeOut = setTimeout(function() {
             if(!sessionTab.closed) {
