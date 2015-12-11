@@ -11,6 +11,8 @@
 
 var _ = require('lodash');
 import Models from '../index';
+import config from '../../config/environment';
+import jwt from 'jsonwebtoken';
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -114,4 +116,15 @@ exports.destroy = function(req, res) {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
+};
+
+
+// Generate a redirect link to resume session
+exports.redirectUrl = function(req, res) {
+  var redirectToken =  jwt.sign({ userId: req.user.id, packId: req.params.id, prevSiteId: req.params.prev, nextSiteId: req.params.next }, config.secrets.session, {
+    expiresInMinutes: 60 * 5
+  });
+  res.status(200).json({
+    token: redirectToken
+  });
 };

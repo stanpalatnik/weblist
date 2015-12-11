@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .directive('siteframe', ['PackSessionService', 'CountDownTimerFactory',function (PackSessionService, CountDownTimerFactory) {
+  .directive('siteframe', ['PackSession','PackSessionService', 'CountDownTimerFactory',function (PackSession, PackSessionService, CountDownTimerFactory) {
     return {
       templateUrl: 'app/siteframe/siteframe.html',
       restrict: 'E',
@@ -9,21 +9,22 @@ angular.module('weblistSavenub')
         var sessionTab = null;
         var openSite = function(site) {
           if(sessionTab === null)  {
-            sessionTab = window.open("http://" + site.domain);
+            var tabTitle = "savenub-" + req.user.id;
+            sessionTab = window.open("http://" + site.domain, tabTitle);
           }
           else sessionTab.location = "http://" + site.domain;
           var timeOut, intervalID;
           timeOut = setTimeout(function() {
             if(!sessionTab.closed) {
               clearTimeout(timeOut);
-              clearInterval(intervalID);
               $scope.siteFinished = true;
-              sessionTab.close();
               var nextSite = PackSessionService.getNextPage();
               if(nextSite != null) {
-                openSite(nextSite);
+                redirectPrompt(nextSite);
+                //openSite(nextSite);
               }
               else {
+                sessionTab.close();
                 $scope.sessionFinished = true;
               }
             }
@@ -39,7 +40,18 @@ angular.module('weblistSavenub')
             }
           }, 500); //check to see if window was closed
         };
-        this.openSite =  openSite;
+        this.openSite = openSite;
+        var redirectPrompt = function(prevSite, nextSite) {
+          //grab token to redirect to
+          var token = PackSession.redirectUrl.get({
+            id: $scope.pack.id,
+            prev: prevSite.id,
+            next: nextSite.id
+          }, function(){
+            console.log(token);
+            console.log(token.token);
+          });
+        }
       },
       link: function (scope, element, attrs, ctrl) {
         scope.pack = PackSessionService.getPack();
