@@ -12,6 +12,17 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       // bower:js
+      'client/bower_components/angular/angular.js',
+      'client/bower_components/angular-resource/angular-resource.js',
+      'client/bower_components/angular-cookies/angular-cookies.js',
+      'client/bower_components/angular-sanitize/angular-sanitize.js',
+      'client/bower_components/lodash/dist/lodash.compat.js',
+      'client/bower_components/angular-ui-router/release/angular-ui-router.js',
+      'client/bower_components/angular-validation-match/dist/angular-validation-match.min.js',
+      'client/bower_components/validator-js/validator.js',
+      'client/bower_components/oclazyload/dist/ocLazyLoad.js',
+      'client/bower_components/tabex/dist/tabex.js',
+      'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'client/app/app.js',
       'client/app/**/*.js',

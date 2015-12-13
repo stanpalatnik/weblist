@@ -16,6 +16,15 @@ angular.module('weblistSavenub')
       .state('packsession.view', {
         url: '/:packId/view',
         templateUrl: 'app/packsession/templates/view.html',
-        controller: 'CreatePackSessionCtrl'
+        controller: 'CreatePackSessionCtrl',
+        resolve: {
+          loadPlugin: function ($ocLazyLoad) {
+            return $ocLazyLoad.load([
+              {
+                files: ['bower_components/tabex/dist/tabex.min.js']
+              }
+            ]);
+          }
+        }
       });
   });

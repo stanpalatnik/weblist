@@ -25,6 +25,16 @@ angular.module('weblistSavenub')
       }
     };
 
+    var peakNextPage = function() {
+      var nextPage = siteList[pageNum + 1];
+      if(nextPage != undefined) {
+        return nextPage;
+      }
+      else {
+        return null;
+      }
+    };
+
     var siteCount = function() {
       return siteList.length;
     };
@@ -54,6 +64,7 @@ angular.module('weblistSavenub')
     return {
       startSession   : startSession,
       getNextPage    : getNextPage,
+      peakNextPage   : peakNextPage,
       siteCount      : siteCount,
       setPage        : setPage,
       hasNext        : hasNextPage,

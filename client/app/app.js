@@ -5,9 +5,10 @@ angular.module('weblistSavenub', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'validation.match'
+  'validation.match',
+  'oc.lazyLoad'
 ])
-  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $ocLazyLoadProvider) {
     $urlRouterProvider
       .otherwise('/');
 

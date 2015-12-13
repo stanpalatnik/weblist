@@ -6,6 +6,15 @@ angular.module('weblistSavenub')
       .state('nextlanding', {
         url: '/nextlanding/:token',
         templateUrl: 'app/nextlanding/nextlanding.html',
-        controller: 'NextlandingCtrl'
+        controller: 'NextlandingCtrl',
+        resolve: {
+          loadPlugin: function ($ocLazyLoad) {
+            return $ocLazyLoad.load([
+              {
+                files: ['bower_components/tabex/dist/tabex.min.js']
+              }
+            ]);
+          }
+        }
       });
   });

@@ -18,10 +18,9 @@ angular.module('weblistSavenub')
             if(!sessionTab.closed) {
               clearTimeout(timeOut);
               $scope.siteFinished = true;
-              var nextSite = PackSessionService.getNextPage();
+              var nextSite = PackSessionService.peakNextPage();
               if(nextSite != null) {
                 redirectPrompt(site, nextSite);
-                //openSite(nextSite);
               }
               else {
                 sessionTab.close();
@@ -59,6 +58,18 @@ angular.module('weblistSavenub')
         scope.manuallyClosed = false;
         scope.sessionFinished = false;
         scope.siteFinished = false;
+        scope.tabChannel = window.tabex.client();
+        scope.tabChannel.on('savenub.packsession', function handler(message) {
+          console.log(message);
+          if(message === 'forward') {
+            //let's proceed to the next page!
+            ctrl.openSite(PackSessionService.getNextPage());
+          }
+          else if(message === 'back') {
+            //user wants to go back to the previous site..
+            ctrl.openSite(PackSessionService.getCurrentPage());
+          }
+        });
         PackSessionService.setPage(0);
         scope.currentSite = PackSessionService.getCurrentPage();
         ctrl.openSite(scope.currentSite);
