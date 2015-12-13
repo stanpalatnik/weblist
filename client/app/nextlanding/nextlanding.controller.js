@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .controller('NextlandingCtrl', function ($scope, PackSession, $stateParams) {
+  .controller('NextlandingCtrl', function ($scope, $q, PackSession, Site, $stateParams) {
     var token = $stateParams.token;
 
     $scope.tokenData = PackSession.parseRedirect({
@@ -10,5 +10,23 @@ angular.module('weblistSavenub')
       prev: token
     }, function(){
       console.log($scope.tokenData);
+
+      $q.all([
+        getSite($scope.tokenData.prevSiteId),
+        getSite($scope.tokenData.nextSiteId)
+      ]).then(function(data) {
+        $scope.prevSite = data[0];
+        $scope.nextSite = data[1];
+      });
     });
+
+    function getSite(siteId) {
+      var d = $q.defer();
+      var result = Site.get({
+        id: siteId
+      }, function() {
+        d.resolve(result);
+      });
+      return d.promise;
+    }
   });
