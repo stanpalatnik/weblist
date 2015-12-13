@@ -9,6 +9,12 @@ angular.module('weblistSavenub')
         params: {
           controller:'redirectUrl'
         }
+      },
+      parseRedirect: {
+        method: 'GET',
+        params: {
+          controller:'parseRedirect'
+        }
       }
     });
   });

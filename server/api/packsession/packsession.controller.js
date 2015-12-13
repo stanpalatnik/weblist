@@ -128,3 +128,13 @@ exports.redirectUrl = function(req, res) {
     token: redirectToken
   });
 };
+
+exports.parseRedirect = function(req, res) {
+  jwt.verify(req.params.token, config.secrets.session, null, function(err, data) {
+    if(err) {
+      handleError(res);
+    } else {
+      res.status(200).json(data);
+    }
+  });
+};

@@ -9,7 +9,7 @@ angular.module('weblistSavenub')
         var sessionTab = null;
         var openSite = function(site) {
           if(sessionTab === null)  {
-            var tabTitle = "savenub-" + req.user.id;
+            var tabTitle = "savenub-" + $scope.pack.UserId;
             sessionTab = window.open("http://" + site.domain, tabTitle);
           }
           else sessionTab.location = "http://" + site.domain;
@@ -20,7 +20,7 @@ angular.module('weblistSavenub')
               $scope.siteFinished = true;
               var nextSite = PackSessionService.getNextPage();
               if(nextSite != null) {
-                redirectPrompt(nextSite);
+                redirectPrompt(site, nextSite);
                 //openSite(nextSite);
               }
               else {
@@ -43,13 +43,13 @@ angular.module('weblistSavenub')
         this.openSite = openSite;
         var redirectPrompt = function(prevSite, nextSite) {
           //grab token to redirect to
-          var token = PackSession.redirectUrl.get({
+          var token = PackSession.redirectUrl({
             id: $scope.pack.id,
             prev: prevSite.id,
             next: nextSite.id
           }, function(){
-            console.log(token);
-            console.log(token.token);
+            console.log("redirect token: " + token.token);
+            sessionTab.location = "/nextlanding/" + token.token;
           });
         }
       },

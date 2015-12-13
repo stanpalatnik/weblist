@@ -14,5 +14,6 @@ router.patch('/:id', auth.isAuthenticated(), controller.update);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 router.get('/:id/redirectUrl/:prev/:next', auth.isAuthenticated(), controller.redirectUrl);
+router.get('/:id/parseRedirect/:token', auth.isAuthenticated(), controller.parseRedirect);
 
 module.exports = router;

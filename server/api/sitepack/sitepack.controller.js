@@ -137,7 +137,7 @@ exports.create = function (req, res) {
       })
         .then(function (SitePackList) {
           if(SitePackList.length > 0) {
-            throw "A site in this position already exists"
+            handleError(res, 409)("A site in this position already exists");
           }
           else {
             Models.SitePack.create(req.body)
