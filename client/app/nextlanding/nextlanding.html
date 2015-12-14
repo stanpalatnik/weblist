@@ -1,5 +1,5 @@
 <div> {{tokenData}}
   This is the nextlanding view.
-  <span>Click here to go back to site {{prevSite.domain}}</span>
-  <span>Click here to go to the next site {{nextSite.domain}}</span>
+  <a ng-click="respondBack()">Click here to go back to site {{prevSite.domain}}</a>
+  <a ng-click="respondNext()">Click here to go to the next site {{nextSite.domain}}</a>
 </div>
