@@ -37,6 +37,7 @@ angular.module('weblistSavenub')
 
     $scope.respondBack = function() {
       sendMessage('back');
+      window.history.back();
     };
 
     var sendMessage = function(message) {

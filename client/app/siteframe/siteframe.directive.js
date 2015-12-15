@@ -66,8 +66,9 @@ angular.module('weblistSavenub')
             ctrl.openSite(PackSessionService.getNextPage());
           }
           else if(message === 'back') {
+            console.log("Received back command");
             //user wants to go back to the previous site..
-            ctrl.openSite(PackSessionService.getCurrentPage());
+            //ctrl.openSite(PackSessionService.getCurrentPage());
           }
         });
         PackSessionService.setPage(0);
