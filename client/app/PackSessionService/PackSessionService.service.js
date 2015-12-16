@@ -61,6 +61,12 @@ angular.module('weblistSavenub')
       return pack;
     };
 
+    var restartSession = function() {
+      pageNum = -1;
+      timeSpentOnPage = 0;
+      timeStarted = new Date().getTime();
+    };
+
     return {
       startSession   : startSession,
       getNextPage    : getNextPage,
@@ -70,6 +76,7 @@ angular.module('weblistSavenub')
       hasNext        : hasNextPage,
       getCurrentPage : getCurrentPage,
       getPackTime    : getPackTime,
-      getPack        : getPack
+      getPack        : getPack,
+      restartSession : restartSession
     }
   });

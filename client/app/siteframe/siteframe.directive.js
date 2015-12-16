@@ -9,7 +9,7 @@ angular.module('weblistSavenub')
         var sessionTab = null;
         var openSite = function(site) {
           if(sessionTab === null)  {
-            var tabTitle = "savenub-" + $scope.pack.UserId;
+            var tabTitle = "savenub-" + $scope.pack.UserId + $scope.pack.id;
             sessionTab = window.open("http://" + site.domain, tabTitle);
           }
           else sessionTab.location = "http://" + site.domain;
@@ -23,7 +23,7 @@ angular.module('weblistSavenub')
                 redirectPrompt(site, nextSite);
               }
               else {
-                sessionTab.close();
+                redirectFinished(site);
                 $scope.sessionFinished = true;
               }
             }
@@ -39,7 +39,6 @@ angular.module('weblistSavenub')
             }
           }, 500); //check to see if window was closed
         };
-        this.openSite = openSite;
         var redirectPrompt = function(prevSite, nextSite) {
           //grab token to redirect to
           var token = PackSession.redirectUrl({
@@ -50,13 +49,39 @@ angular.module('weblistSavenub')
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/" + token.token;
           });
-        }
+        };
+
+        var redirectFinished = function(lastSite) {
+          //grab token to redirect to
+          var token = PackSession.redirectUrl({
+            id: $scope.pack.id,
+            prev: lastSite.id,
+            next: lastSite.id
+          }, function(){
+            console.log("redirect token: " + token.token);
+            sessionTab.location = "/nextlanding/last/" + token.token;
+          });
+        };
+        var resumeSession = function() {
+          $scope.pausedSession = false;
+          openSite(PackSessionService.getNextPage());
+        };
+
+        var startSession = function() {
+          PackSessionService.setPage(0);
+          scope.currentSite = PackSessionService.getCurrentPage();
+          openSite(scope.currentSite);
+        };
+        this.openSite = openSite;
+        this.resumeSession = resumeSession;
+        this.startSession = startSession;
       },
       link: function (scope, element, attrs, ctrl) {
         scope.pack = PackSessionService.getPack();
         var time = PackSessionService.getPackTime();
         scope.manuallyClosed = false;
         scope.sessionFinished = false;
+        scope.pausedSession = false;
         scope.siteFinished = false;
         scope.tabChannel = window.tabex.client();
         scope.tabChannel.on('savenub.packsession', function handler(message) {
@@ -67,13 +92,19 @@ angular.module('weblistSavenub')
           }
           else if(message === 'back') {
             console.log("Received back command");
-            //user wants to go back to the previous site..
-            //ctrl.openSite(PackSessionService.getCurrentPage());
+            scope.pausedSession = true;
+          }
+          else if(message === 'restart') {
+            console.log("Restarting session");
+            scope.manuallyClosed = false;
+            scope.sessionFinished = false;
+            scope.pausedSession = false;
+            scope.siteFinished = false;
+            PackSessionService.restartSession();
+            ctrl.startSession();
           }
         });
-        PackSessionService.setPage(0);
-        scope.currentSite = PackSessionService.getCurrentPage();
-        ctrl.openSite(scope.currentSite);
+        ctrl.startSession();
       }
     };
   }]);
