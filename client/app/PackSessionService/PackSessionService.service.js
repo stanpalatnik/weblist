@@ -2,14 +2,15 @@
 
 angular.module('weblistSavenub')
   .service('PackSessionService', function () {
-    var pack, currentSite, timeSpentOnPage, timeStarted, pageNum, siteList, allocatedPackTime;
+    var pack, currentSite, timeSpentOnPage, timeSpentOnSession, timeStarted, pageNum, siteList, allocatedPackTime;
 
     var startSession = function(_pack, _siteList, _allocatedPackTime) {
       pack = _pack;
       siteList = _siteList;
       allocatedPackTime = _allocatedPackTime;
       pageNum = -1;
-      timeSpentOnPage = 0;
+      timeSpentOnPage = [];
+      timeSpentOnSession = 0;
       timeStarted = new Date().getTime();
     };
 
@@ -44,7 +45,7 @@ angular.module('weblistSavenub')
     };
 
     var setPage = function(page) {
-      if(page > siteList.length) throw "Page " + page + " does not exit"
+      if(page > siteList.length) return new Error("Page " + page + " does not exit");
       pageNum = page;
       currentSite = siteList[pageNum];
     };
@@ -53,8 +54,25 @@ angular.module('weblistSavenub')
       return pageNum < siteCount() -1;
     };
 
+    var getCurrentPageNum = function () {
+      return pageNum;
+    };
+
     var getPackTime = function() {
       return allocatedPackTime;
+    };
+
+    var getTimeStarted = function() {
+      return timeStarted;
+    };
+
+    var getPageTimeSpent = function(page) {
+      return timeSpentOnPage[page];
+    };
+
+    var logTime = function(timeInMillis) {
+      timeSpentOnSession = timeSpentOnSession + timeInMillis;
+      timeSpentOnPage[pageNum] = timeSpentOnPage[pageNum] + timeInMillis
     };
 
     var getPack = function() {
@@ -68,15 +86,19 @@ angular.module('weblistSavenub')
     };
 
     return {
-      startSession   : startSession,
-      getNextPage    : getNextPage,
-      peakNextPage   : peakNextPage,
-      siteCount      : siteCount,
-      setPage        : setPage,
-      hasNext        : hasNextPage,
-      getCurrentPage : getCurrentPage,
-      getPackTime    : getPackTime,
-      getPack        : getPack,
-      restartSession : restartSession
+      startSession      : startSession,
+      getNextPage       : getNextPage,
+      peakNextPage      : peakNextPage,
+      siteCount         : siteCount,
+      setPage           : setPage,
+      hasNext           : hasNextPage,
+      getCurrentPage    : getCurrentPage,
+      getCurrentPageNum : getCurrentPageNum,
+      getPackTime       : getPackTime,
+      getTimeStarted    : getTimeStarted,
+      getPageTimeSpent  : getPageTimeSpent,
+      logTime           : logTime,
+      getPack           : getPack,
+      restartSession    : restartSession
     }
   });

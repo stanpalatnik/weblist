@@ -8,6 +8,7 @@ angular.module('weblistSavenub')
       controller: function($scope) {
         var sessionTab = null;
         var openSite = function(site) {
+          var notificationShown = false;
           if(sessionTab === null)  {
             var tabTitle = "savenub-" + $scope.pack.UserId + $scope.pack.id;
             sessionTab = window.open("http://" + site.domain, tabTitle);
@@ -37,31 +38,44 @@ angular.module('weblistSavenub')
               clearTimeout(timeOut);
               clearInterval(intervalID);
             }
+            else {
+              PackSessionService.logTime(500);
+              var timeOnCurrentPage = PackSessionService.getPageTimeSpent(PackSessionService.getCurrentPage());
+              if(($scope.currentSite.allocatedTime*1000 * 60) - timeOnCurrentPage < (1000*60)) {
+                //less than a minute left allocated for this site
+                if(!notificationShown) {
+                  redirectWarning();
+                  notificationShown = true;
+                }
+              }
+            }
           }, 500); //check to see if window was closed
         };
         var redirectPrompt = function(prevSite, nextSite) {
           //grab token to redirect to
-          var token = PackSession.redirectUrl({
-            id: $scope.pack.id,
-            prev: prevSite.id,
-            next: nextSite.id
-          }, function(){
+          grabToken(prevSite, nextSite, function (token) {
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/" + token.token;
           });
         };
 
+        var redirectWarning = function() {
+          var prevSite = PackSessionService.getCurrentPage();
+          var nextSite = PackSessionService.peakNextPage();
+          grabToken(prevSite, nextSite, function (token) {
+            console.log("redirect notification token: " + token.token);
+            sessionTab.location = "/nextlanding/notification" + token.token;
+          });
+        };
+
         var redirectFinished = function(lastSite) {
           //grab token to redirect to
-          var token = PackSession.redirectUrl({
-            id: $scope.pack.id,
-            prev: lastSite.id,
-            next: lastSite.id
-          }, function(){
+          grabToken(lastSite, lastSite, function (token) {
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/last/" + token.token;
           });
         };
+
         var resumeSession = function() {
           $scope.pausedSession = false;
           openSite(PackSessionService.getNextPage());
@@ -72,6 +86,17 @@ angular.module('weblistSavenub')
           scope.currentSite = PackSessionService.getCurrentPage();
           openSite(scope.currentSite);
         };
+
+        var grabToken = function(prevSite, nextSite, callback) {
+          var token = PackSession.redirectUrl({
+            id: $scope.pack.id,
+            prev: prevSite.id,
+            next: nextSite.id
+          }, function(){
+            callback(token);
+          });
+        };
+
         this.openSite = openSite;
         this.resumeSession = resumeSession;
         this.startSession = startSession;
