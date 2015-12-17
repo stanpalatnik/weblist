@@ -10,8 +10,6 @@ angular.module('weblistSavenub')
       id: 0,
       prev: token
     }, function(){
-      console.log($scope.tokenData);
-
       $q.all([
         getSite($scope.tokenData.prevSiteId),
         getSite($scope.tokenData.nextSiteId)

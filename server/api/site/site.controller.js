@@ -68,7 +68,11 @@ exports.index = function(req, res) {
 
 // Gets a single Site from the DB
 exports.show = function(req, res) {
-  Models.Site.findById(req.params.id)
+  Models.Site.find({
+    where: {
+      id: req.params.id
+    }
+  })
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
     .catch(handleError(res));

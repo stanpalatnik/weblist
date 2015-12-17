@@ -83,8 +83,8 @@ angular.module('weblistSavenub')
 
         var startSession = function() {
           PackSessionService.setPage(0);
-          scope.currentSite = PackSessionService.getCurrentPage();
-          openSite(scope.currentSite);
+          $scope.currentSite = PackSessionService.getCurrentPage();
+          openSite($scope.currentSite);
         };
 
         var grabToken = function(prevSite, nextSite, callback) {
