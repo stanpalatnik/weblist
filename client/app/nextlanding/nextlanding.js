@@ -19,7 +19,7 @@ angular.module('weblistSavenub')
       })
       .state('nextlanding.notification', {
         url: '/nextlanding/notification/:token',
-        templateUrl: 'app/nextlanding/nextlanding.html',
+        templateUrl: 'app/nextlanding/notification.html',
         controller: 'NextlandingCtrl',
         resolve: {
           loadPlugin: function ($ocLazyLoad) {

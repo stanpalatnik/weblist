@@ -7,6 +7,7 @@ angular.module('weblistSavenub')
       restrict: 'E',
       controller: function($scope) {
         var sessionTab = null;
+        var notificationWindow = null;
         var openSite = function(site) {
           var notificationShown = false;
           if(sessionTab === null)  {
@@ -21,6 +22,7 @@ angular.module('weblistSavenub')
               $scope.siteFinished = true;
               var nextSite = PackSessionService.peakNextPage();
               if(nextSite != null) {
+                notificationWindow.close();
                 redirectPrompt(site, nextSite);
               }
               else {
@@ -29,6 +31,7 @@ angular.module('weblistSavenub')
               }
             }
           }, $scope.currentSite.allocatedTime*1000 * 60);
+          console.log("site scheduled for " + ($scope.currentSite.allocatedTime*1000 * 60) + "milliseconds");
 
           intervalID = window.setInterval(function() {
             if(sessionTab.closed) {
@@ -40,11 +43,12 @@ angular.module('weblistSavenub')
             }
             else {
               PackSessionService.logTime(500);
-              var timeOnCurrentPage = PackSessionService.getPageTimeSpent(PackSessionService.getCurrentPage());
+              var timeOnCurrentPage = PackSessionService.getPageTimeSpent(PackSessionService.getCurrentPageNum());
+              console.log("current time in millis: " + timeOnCurrentPage);
               if(($scope.currentSite.allocatedTime*1000 * 60) - timeOnCurrentPage < (1000*60)) {
                 //less than a minute left allocated for this site
                 if(!notificationShown) {
-                  redirectWarning();
+                  notificationWindow = redirectWarning();
                   notificationShown = true;
                 }
               }
@@ -62,9 +66,15 @@ angular.module('weblistSavenub')
         var redirectWarning = function() {
           var prevSite = PackSessionService.getCurrentPage();
           var nextSite = PackSessionService.peakNextPage();
-          grabToken(prevSite, nextSite, function (token) {
+          return grabToken(prevSite, nextSite, function (token) {
             console.log("redirect notification token: " + token.token);
-            sessionTab.location = "/nextlanding/notification" + token.token;
+            var notificationWindow = window.open("/nextlanding/notification" + token.token, "", "width=200, height=100");
+            var intervalID = window.setInterval(function() {
+              if(notificationWindow.closed) {
+                clearInterval(intervalID);
+              }
+            }, 500); //check to see if window was closed
+            return notificationWindow;
           });
         };
 

@@ -12,6 +12,7 @@ angular.module('weblistSavenub')
       timeSpentOnPage = [];
       timeSpentOnSession = 0;
       timeStarted = new Date().getTime();
+      fileTimeArr();
     };
 
     var getNextPage = function() {
@@ -83,6 +84,13 @@ angular.module('weblistSavenub')
       pageNum = -1;
       timeSpentOnPage = 0;
       timeStarted = new Date().getTime();
+      fileTimeArr();
+    };
+
+    var fileTimeArr = function() {
+      for(var i = 0; i< siteList.length; i++) {
+        timeSpentOnPage[i] = 0;
+      }
     };
 
     return {
