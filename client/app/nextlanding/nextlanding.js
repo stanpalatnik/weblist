@@ -32,7 +32,7 @@ angular.module('weblistSavenub')
         }
       })
       .state('nextlanding.last', {
-        url: '/nextlanding/notification/:token',
+        url: '/nextlanding/last/:token',
         templateUrl: 'app/nextlanding/finished.html',
         controller: 'NextlandingCtrl',
         resolve: {

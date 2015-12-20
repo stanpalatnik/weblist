@@ -15,10 +15,11 @@ angular.module('weblistSavenub')
             sessionTab = window.open("http://" + site.domain, tabTitle);
           }
           else sessionTab.location = "http://" + site.domain;
-          var timeOut, intervalID;
+          var timeOut, intervalID, notificationTimeout;
           timeOut = setTimeout(function() {
             if(!sessionTab.closed) {
               clearTimeout(timeOut);
+              clearTimeout(notificationTimeout);
               $scope.siteFinished = true;
               var nextSite = PackSessionService.peakNextPage();
               if(notificationShown) {
@@ -35,10 +36,24 @@ angular.module('weblistSavenub')
           }, $scope.currentSite.allocatedTime*1000 * 60);
           console.log("site scheduled for " + ($scope.currentSite.allocatedTime*1000 * 60) + "milliseconds");
 
+          notificationTimeout = window.setTimeout(function(){
+            PackSessionService.logTime();
+            if(PackSessionService.isSiteExpiring()) { //make sure we didn't have any pauses
+              if(!notificationShown) {
+                redirectWarning(function(notificationW) {
+                  notificationWindow = notificationW;
+                });
+                notificationShown = true;
+              }
+            }
+          }, PackSessionService.getExpireWarnTime());
+
           intervalID = window.setInterval(function() {
             if(sessionTab.closed) {
               $scope.$apply(function() {
-                $scope.manuallyClosed = true;
+                if(!$scope.sessionFinished) {
+                  $scope.manuallyClosed = true;
+                }
               });
               clearTimeout(timeOut);
               clearInterval(intervalID);
@@ -70,7 +85,7 @@ angular.module('weblistSavenub')
 
         var redirectWarning = function(cb) {
           var prevSite = PackSessionService.getCurrentPage();
-          var nextSite = PackSessionService.peakNextPage();
+          var nextSite = PackSessionService.peakNextPage() || prevSite;
           return grabToken(prevSite, nextSite, function (token) {
             console.log("redirect notification token: " + token.token);
             var notificationWindow = window.open("/nextlanding/notification" + token.token, "", "width=200, height=100");

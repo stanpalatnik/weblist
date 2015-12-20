@@ -30,13 +30,7 @@ angular.module('weblistSavenub')
     };
 
     var peakNextPage = function() {
-      var nextPage = siteList[pageNum + 1];
-      if(nextPage != undefined) {
-        return nextPage;
-      }
-      else {
-        return null;
-      }
+      return siteList[pageNum + 1];
     };
 
     var siteCount = function() {
@@ -101,6 +95,16 @@ angular.module('weblistSavenub')
       }
     };
 
+    var getExpireWarnTime = function(){
+      var allocatedTimeMin = siteList[pageNum].allocatedTime*ONE_MIN;
+      if((allocatedTimeMin) < TWO_MIN) {
+        return (allocatedTimeMin) / 2.0;
+      }
+      else {
+        return allocatedTimeMin - (allocatedTimeMin - ONE_MIN)
+      }
+    };
+
     var getPack = function() {
       return pack;
     };
@@ -135,6 +139,7 @@ angular.module('weblistSavenub')
       getPageTimeSpent  : getPageTimeSpent,
       logTime           : logTime,
       isSiteExpiring    : isSiteExpiring,
+      getExpireWarnTime : getExpireWarnTime,
       getPack           : getPack,
       restartSession    : restartSession
     }
