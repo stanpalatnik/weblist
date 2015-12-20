@@ -79,12 +79,13 @@ angular.module('weblistSavenub')
     };
 
     var isSiteExpiring = function() {
-      var timeOnCurrentPage = timeSpentOnPage[pageNum].spent;
-      if((siteList[pageNum].allocatedTime*ONE_MIN) - timeOnCurrentPage < ONE_MIN) {
+      var timeOnCurrentPage = timeSpentOnPage[pageNum].spent - countPauseTime();
+      var allocatedTime = siteList[pageNum].allocatedTime*ONE_MIN;
+        if(allocatedTime - timeOnCurrentPage < ONE_MIN) {
         //less than a minute left, so we should show the warning unless the actual site is scheduled for a small time
-        if((siteList[pageNum].allocatedTime* ONE_MIN) < TWO_MIN) {
-          console.log(((siteList[pageNum].allocatedTime * ONE_MIN) - timeOnCurrentPage) + ": " + ((siteList[pageNum].allocatedTime * ONE_MIN) / 2.0 ) );
-          return (siteList[pageNum].allocatedTime * ONE_MIN) - timeOnCurrentPage < ((siteList[pageNum].allocatedTime * ONE_MIN) / 2.0 );
+        if(allocatedTime < TWO_MIN) {
+          console.log((allocatedTime - timeOnCurrentPage) + ": " + (allocatedTime / 2.0 ) );
+          return allocatedTime - timeOnCurrentPage < (allocatedTime / 2.0 );
         }
         else {
           return true;
@@ -120,9 +121,42 @@ angular.module('weblistSavenub')
       for(var i = 0; i< siteList.length; i++) {
         timeSpentOnPage[i] = {
           started: undefined,
-          spent: 0
+          spent: 0,
+          pauses: []
         };
       }
+    };
+
+    var pauseSession = function() {
+      timeSpentOnPage[pageNum].pauses.push(
+        {
+          start: new Date().getTime(),
+          end: undefined
+        }
+      );
+    };
+
+    var resumeSession = function() {
+      if(timeSpentOnPage[pageNum].pauses.length > 0) {
+        var lastPause = timeSpentOnPage[pageNum].pauses[timeSpentOnPage[pageNum].pauses -1];
+        if(lastPause != undefined) {
+          lastPause.end = new Date().getTime();
+        }
+      }
+      else {
+        console.log("Could not find a paused session for this page.")
+      }
+    };
+
+    var countPauseTime = function() {
+        var pauses = timeSpentOnPage[pageNum].pauses;
+        var pauseTime = 0;
+        pauses.forEach(pause => {
+          if(pause.end !== undefined) {
+            pauseTime += pause.end - pause.start;
+          }
+        });
+        return pauseTime;
     };
 
     return {
@@ -140,6 +174,9 @@ angular.module('weblistSavenub')
       logTime           : logTime,
       isSiteExpiring    : isSiteExpiring,
       getExpireWarnTime : getExpireWarnTime,
+      pauseSession      : pauseSession,
+      resumeSession     : resumeSession,
+      countPauseTime    : countPauseTime,
       getPack           : getPack,
       restartSession    : restartSession
     }
