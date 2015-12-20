@@ -21,8 +21,10 @@ angular.module('weblistSavenub')
               clearTimeout(timeOut);
               $scope.siteFinished = true;
               var nextSite = PackSessionService.peakNextPage();
-              if(nextSite != null) {
+              if(notificationShown) {
                 notificationWindow.close();
+              }
+              if(nextSite != null) {
                 redirectPrompt(site, nextSite);
               }
               else {
@@ -40,15 +42,18 @@ angular.module('weblistSavenub')
               });
               clearTimeout(timeOut);
               clearInterval(intervalID);
+              if(notificationShown && !notificationWindow.closed) {
+                notificationWindow.close();
+              }
             }
             else {
-              PackSessionService.logTime(500);
-              var timeOnCurrentPage = PackSessionService.getPageTimeSpent(PackSessionService.getCurrentPageNum());
-              console.log("current time in millis: " + timeOnCurrentPage);
-              if(($scope.currentSite.allocatedTime*1000 * 60) - timeOnCurrentPage < (1000*60)) {
+              PackSessionService.logTime();
+              if(PackSessionService.isSiteExpiring()) {
                 //less than a minute left allocated for this site
                 if(!notificationShown) {
-                  notificationWindow = redirectWarning();
+                  redirectWarning(function(notificationW) {
+                    notificationWindow = notificationW;
+                  });
                   notificationShown = true;
                 }
               }
@@ -63,7 +68,7 @@ angular.module('weblistSavenub')
           });
         };
 
-        var redirectWarning = function() {
+        var redirectWarning = function(cb) {
           var prevSite = PackSessionService.getCurrentPage();
           var nextSite = PackSessionService.peakNextPage();
           return grabToken(prevSite, nextSite, function (token) {
@@ -74,7 +79,7 @@ angular.module('weblistSavenub')
                 clearInterval(intervalID);
               }
             }, 500); //check to see if window was closed
-            return notificationWindow;
+            cb(notificationWindow);
           });
         };
 

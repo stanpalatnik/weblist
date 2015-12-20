@@ -30,5 +30,19 @@ angular.module('weblistSavenub')
             ]);
           }
         }
+      })
+      .state('nextlanding.last', {
+        url: '/nextlanding/notification/:token',
+        templateUrl: 'app/nextlanding/finished.html',
+        controller: 'NextlandingCtrl',
+        resolve: {
+          loadPlugin: function ($ocLazyLoad) {
+            return $ocLazyLoad.load([
+              {
+                files: ['bower_components/tabex/dist/tabex.min.js']
+              }
+            ]);
+          }
+        }
       });
   });

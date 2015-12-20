@@ -4,6 +4,8 @@ angular.module('weblistSavenub')
   .service('PackSessionService', function () {
     var pack, currentSite, timeSpentOnPage, timeSpentOnSession, timeStarted, pageNum, siteList, allocatedPackTime;
 
+    var ONE_MIN = 1000 * 60;
+    var TWO_MIN = 2000 * 60;
     var startSession = function(_pack, _siteList, _allocatedPackTime) {
       pack = _pack;
       siteList = _siteList;
@@ -68,12 +70,35 @@ angular.module('weblistSavenub')
     };
 
     var getPageTimeSpent = function(page) {
-      return timeSpentOnPage[page];
+      return timeSpentOnPage[page].spent;
     };
 
-    var logTime = function(timeInMillis) {
-      timeSpentOnSession = timeSpentOnSession + timeInMillis;
-      timeSpentOnPage[pageNum] = timeSpentOnPage[pageNum] + timeInMillis
+    var logTime = function() {
+      timeSpentOnSession = new Date().getTime() - timeStarted;
+      if(timeSpentOnPage[pageNum].started !== undefined) {
+        timeSpentOnPage[pageNum].spent = new Date().getTime() - timeSpentOnPage[pageNum].started;
+      }
+      else {
+        timeSpentOnPage[pageNum].started = new Date().getTime();
+        timeSpentOnPage[pageNum].spent = 0;
+      }
+    };
+
+    var isSiteExpiring = function() {
+      var timeOnCurrentPage = timeSpentOnPage[pageNum].spent;
+      if((siteList[pageNum].allocatedTime*ONE_MIN) - timeOnCurrentPage < ONE_MIN) {
+        //less than a minute left, so we should show the warning unless the actual site is scheduled for a small time
+        if((siteList[pageNum].allocatedTime* ONE_MIN) < TWO_MIN) {
+          console.log(((siteList[pageNum].allocatedTime * ONE_MIN) - timeOnCurrentPage) + ": " + ((siteList[pageNum].allocatedTime * ONE_MIN) / 2.0 ) );
+          return (siteList[pageNum].allocatedTime * ONE_MIN) - timeOnCurrentPage < ((siteList[pageNum].allocatedTime * ONE_MIN) / 2.0 );
+        }
+        else {
+          return true;
+        }
+      }
+      else {
+        return false;
+      }
     };
 
     var getPack = function() {
@@ -82,14 +107,17 @@ angular.module('weblistSavenub')
 
     var restartSession = function() {
       pageNum = -1;
-      timeSpentOnPage = 0;
+      timeSpentOnPage = [];
       timeStarted = new Date().getTime();
       fileTimeArr();
     };
 
     var fileTimeArr = function() {
       for(var i = 0; i< siteList.length; i++) {
-        timeSpentOnPage[i] = 0;
+        timeSpentOnPage[i] = {
+          started: undefined,
+          spent: 0
+        };
       }
     };
 
@@ -106,6 +134,7 @@ angular.module('weblistSavenub')
       getTimeStarted    : getTimeStarted,
       getPageTimeSpent  : getPageTimeSpent,
       logTime           : logTime,
+      isSiteExpiring    : isSiteExpiring,
       getPack           : getPack,
       restartSession    : restartSession
     }
