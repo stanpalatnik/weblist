@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .directive('siteframe', ['PackSession','PackSessionService', 'CountDownTimerFactory',function (PackSession, PackSessionService, CountDownTimerFactory) {
+  .directive('siteframe', ['PackSession','PackSessionService', 'CountDownTimerFactory', 'PackUtil',function (PackSession, PackSessionService, CountDownTimerFactory, PackUtil) {
     return {
       templateUrl: 'app/siteframe/siteframe.html',
       restrict: 'E',
@@ -89,7 +89,7 @@ angular.module('weblistSavenub')
 
         var redirectPrompt = function(prevSite, nextSite) {
           //grab token to redirect to
-          grabToken(prevSite, nextSite, function (token) {
+          PackUtil.grabToken($scope.pack.id, prevSite, nextSite, function (token) {
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/" + token.token;
           });
@@ -98,7 +98,7 @@ angular.module('weblistSavenub')
         var redirectWarning = function(cb) {
           var prevSite = PackSessionService.getCurrentPage();
           var nextSite = PackSessionService.peakNextPage() || prevSite;
-          return grabToken(prevSite, nextSite, function (token) {
+          return PackUtil.grabToken($scope.pack.id, prevSite, nextSite, function (token) {
             console.log("redirect notification token: " + token.token);
             var notificationWindow = window.open("/nextlanding/notification" + token.token, "", "width=200, height=100");
             var intervalID = window.setInterval(function() {
@@ -112,7 +112,7 @@ angular.module('weblistSavenub')
 
         var redirectFinished = function(lastSite) {
           //grab token to redirect to
-          grabToken(lastSite, lastSite, function (token) {
+          PackUtil.grabToken($scope.pack.id, lastSite, lastSite, function (token) {
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/last/" + token.token;
           });
@@ -122,16 +122,6 @@ angular.module('weblistSavenub')
           PackSessionService.setPage(0);
           $scope.currentSite = PackSessionService.getCurrentPage();
           openSite($scope.currentSite);
-        };
-
-        var grabToken = function(prevSite, nextSite, callback) {
-          var token = PackSession.redirectUrl({
-            id: $scope.pack.id,
-            prev: prevSite.id,
-            next: nextSite.id
-          }, function(){
-            callback(token);
-          });
         };
 
         var pauseSession = function() {

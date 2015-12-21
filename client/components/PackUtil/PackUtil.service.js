@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .service('PackUtilService', function () {
+  .service('PackUtilService', ['PackSession', function (PackSession) {
     /**
      * Calculate the amount of time to display site per session. Weight is assumed to be in minutes
      */
@@ -28,8 +28,19 @@ angular.module('weblistSavenub')
       });
     };
 
+    var grabToken = function(packId, prevSite, nextSite, callback) {
+      var token = PackSession.redirectUrl({
+        id: packId,
+        prev: prevSite.id,
+        next: nextSite.id
+      }, function(){
+        callback(token);
+      });
+    };
+
     return {
-      calculateTimePerSite : calculateTimePerSite
+      calculateTimePerSite : calculateTimePerSite,
+      grabToken            : grabToken
     }
-  }
+  }]
 );
