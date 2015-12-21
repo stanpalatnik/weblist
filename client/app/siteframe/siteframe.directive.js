@@ -75,7 +75,18 @@ angular.module('weblistSavenub')
               }
             }
           }, 500); //check to see if window was closed
+
+          $scope.tabChannel.on('savenub.packsession', function handler(message) {
+            console.log(message);
+            clearTimeout(timeOut);
+            clearTimeout(notificationTimeout);
+            clearInterval(intervalID);
+            if(notificationShown && !notificationWindow.closed) {
+              notificationWindow.close();
+            }
+          });
         };
+
         var redirectPrompt = function(prevSite, nextSite) {
           //grab token to redirect to
           grabToken(prevSite, nextSite, function (token) {
@@ -131,6 +142,7 @@ angular.module('weblistSavenub')
         var resumeSession = function() {
           $scope.pausedSession = false;
           PackSessionService.resumeSession();
+          console.log("paused for:" + PackSessionService.getPauseTime);
           openSite(PackSessionService.getCurrentPage());
         };
 
@@ -155,6 +167,11 @@ angular.module('weblistSavenub')
           }
           else if(message === 'back') {
             console.log("Received back command");
+            ctrl.openSite(PackSessionService.getNextPage());
+            ctrl.pauseSession();
+          }
+          else if(message === 'pause') {
+            console.log("Received pause command");
             ctrl.pauseSession();
           }
           else if(message === 'restart') {

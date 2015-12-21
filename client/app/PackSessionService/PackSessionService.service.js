@@ -79,7 +79,7 @@ angular.module('weblistSavenub')
     };
 
     var isSiteExpiring = function() {
-      var timeOnCurrentPage = timeSpentOnPage[pageNum].spent - countPauseTime();
+      var timeOnCurrentPage = timeSpentOnPage[pageNum].spent - getPauseTime();
       var allocatedTime = siteList[pageNum].allocatedTime*ONE_MIN;
         if(allocatedTime - timeOnCurrentPage < ONE_MIN) {
         //less than a minute left, so we should show the warning unless the actual site is scheduled for a small time
@@ -148,7 +148,7 @@ angular.module('weblistSavenub')
       }
     };
 
-    var countPauseTime = function() {
+    var getPauseTime = function() {
         var pauses = timeSpentOnPage[pageNum].pauses;
         var pauseTime = 0;
         pauses.forEach(pause => {
@@ -176,7 +176,7 @@ angular.module('weblistSavenub')
       getExpireWarnTime : getExpireWarnTime,
       pauseSession      : pauseSession,
       resumeSession     : resumeSession,
-      countPauseTime    : countPauseTime,
+      getPauseTime      : getPauseTime,
       getPack           : getPack,
       restartSession    : restartSession
     }
