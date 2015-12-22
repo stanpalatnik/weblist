@@ -18,6 +18,7 @@ angular.module('weblistSavenub')
     };
 
     var getNextPage = function() {
+      timeSpentOnPage[pageNum].onRedirect = false;
       pageNum = pageNum + 1;
       var nextPage = siteList[pageNum];
       if(nextPage != undefined) {
@@ -68,19 +69,33 @@ angular.module('weblistSavenub')
     };
 
     var logTime = function() {
-      timeSpentOnSession = new Date().getTime() - timeStarted;
-      if(timeSpentOnPage[pageNum].started !== undefined) {
-        timeSpentOnPage[pageNum].spent = new Date().getTime() - timeSpentOnPage[pageNum].started;
-      }
-      else {
-        timeSpentOnPage[pageNum].started = new Date().getTime();
-        timeSpentOnPage[pageNum].spent = 0;
+      if(timeSpentOnPage[pageNum].onRedirect == false) {
+        var paused = false;
+        if(timeSpentOnPage[pageNum].pauses.length > 0) {
+          timeSpentOnPage[pageNum].pauses.foreach(pause => {
+            if(pause.end === undefined) {
+              console.log("found paused session, pause started at: " + pause.start);
+              paused = true;
+            }
+          })
+        }
+        if(!paused) {
+          timeSpentOnSession = new Date().getTime() - timeStarted;
+          if(timeSpentOnPage[pageNum].started !== undefined) {
+            timeSpentOnPage[pageNum].spent = new Date().getTime() - timeSpentOnPage[pageNum].started;
+          }
+          else {
+            timeSpentOnPage[pageNum].started = new Date().getTime();
+            timeSpentOnPage[pageNum].spent = 0;
+          }
+        }
       }
     };
 
     var isSiteExpiring = function() {
       var timeOnCurrentPage = timeSpentOnPage[pageNum].spent - getPauseTime();
       var allocatedTime = siteList[pageNum].allocatedTime*ONE_MIN;
+      console.log((allocatedTime - timeOnCurrentPage) + ": " + (allocatedTime / 2.0 ) );
         if(allocatedTime - timeOnCurrentPage < ONE_MIN) {
         //less than a minute left, so we should show the warning unless the actual site is scheduled for a small time
         if(allocatedTime < TWO_MIN) {
@@ -122,7 +137,8 @@ angular.module('weblistSavenub')
         timeSpentOnPage[i] = {
           started: undefined,
           spent: 0,
-          pauses: []
+          pauses: [],
+          onRedirect : false
         };
       }
     };
@@ -131,7 +147,8 @@ angular.module('weblistSavenub')
       timeSpentOnPage[pageNum].pauses.push(
         {
           start: new Date().getTime(),
-          end: undefined
+          end: undefined,
+          onRedirect : false
         }
       );
     };
@@ -159,6 +176,10 @@ angular.module('weblistSavenub')
         return pauseTime;
     };
 
+    var setOnRedirect = function(isRedirect) {
+      timeSpentOnPage[pageNum].onRedirect = isRedirect;
+    };
+
     return {
       startSession      : startSession,
       getNextPage       : getNextPage,
@@ -174,6 +195,7 @@ angular.module('weblistSavenub')
       logTime           : logTime,
       isSiteExpiring    : isSiteExpiring,
       getExpireWarnTime : getExpireWarnTime,
+      setOnRedirect     : setOnRedirect,
       pauseSession      : pauseSession,
       resumeSession     : resumeSession,
       getPauseTime      : getPauseTime,

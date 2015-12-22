@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weblistSavenub')
-  .directive('siteframe', ['PackSession','PackSessionService', 'CountDownTimerFactory', 'PackUtil',function (PackSession, PackSessionService, CountDownTimerFactory, PackUtil) {
+  .directive('siteframe', ['PackSession','PackSessionService', 'CountDownTimerFactory', 'PackUtilService',function (PackSession, PackSessionService, CountDownTimerFactory, PackUtilService) {
     return {
       templateUrl: 'app/siteframe/siteframe.html',
       restrict: 'E',
@@ -22,15 +22,20 @@ angular.module('weblistSavenub')
               clearTimeout(notificationTimeout);
               $scope.siteFinished = true;
               var nextSite = PackSessionService.peakNextPage();
-              if(notificationShown) {
-                notificationWindow.close();
-              }
-              if(nextSite != null) {
-                redirectPrompt(site, nextSite);
+              if(PackSessionService.isSiteExpiring()) {
+                if(notificationShown) {
+                  notificationWindow.close();
+                }
+                if(nextSite != null) {
+                  redirectPrompt(site, nextSite);
+                }
+                else {
+                  redirectFinished(site);
+                  $scope.sessionFinished = true;
+                }
               }
               else {
-                redirectFinished(site);
-                $scope.sessionFinished = true;
+                console.log("failed to redirect since not expiring?");
               }
             }
           }, $scope.currentSite.allocatedTime*1000 * 60);
@@ -74,9 +79,10 @@ angular.module('weblistSavenub')
                 }
               }
             }
-          }, 500); //check to see if window was closed
+          }, 1000); //check to see if window was closed
 
           $scope.tabChannel.on('savenub.packsession', function handler(message) {
+            PackSessionService.setOnRedirect(false);
             console.log(message);
             clearTimeout(timeOut);
             clearTimeout(notificationTimeout);
@@ -89,32 +95,34 @@ angular.module('weblistSavenub')
 
         var redirectPrompt = function(prevSite, nextSite) {
           //grab token to redirect to
-          PackUtil.grabToken($scope.pack.id, prevSite, nextSite, function (token) {
+          PackUtilService.grabToken($scope.pack.id, prevSite, nextSite, function (token) {
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/" + token.token;
+            PackSessionService.setOnRedirect(true);
           });
         };
 
         var redirectWarning = function(cb) {
           var prevSite = PackSessionService.getCurrentPage();
           var nextSite = PackSessionService.peakNextPage() || prevSite;
-          return PackUtil.grabToken($scope.pack.id, prevSite, nextSite, function (token) {
+          return PackUtilService.grabToken($scope.pack.id, prevSite, nextSite, function (token) {
             console.log("redirect notification token: " + token.token);
             var notificationWindow = window.open("/nextlanding/notification" + token.token, "", "width=200, height=100");
             var intervalID = window.setInterval(function() {
               if(notificationWindow.closed) {
                 clearInterval(intervalID);
               }
-            }, 500); //check to see if window was closed
+            }, 1000); //check to see if window was closed
             cb(notificationWindow);
           });
         };
 
         var redirectFinished = function(lastSite) {
           //grab token to redirect to
-          PackUtil.grabToken($scope.pack.id, lastSite, lastSite, function (token) {
+          PackUtilService.grabToken($scope.pack.id, lastSite, lastSite, function (token) {
             console.log("redirect token: " + token.token);
             sessionTab.location = "/nextlanding/last/" + token.token;
+            PackSessionService.setOnRedirect(true);
           });
         };
 
@@ -153,11 +161,12 @@ angular.module('weblistSavenub')
           console.log(message);
           if(message === 'forward') {
             //let's proceed to the next page!
-            ctrl.openSite(PackSessionService.getNextPage());
+            scope.currentSite = PackSessionService.getNextPage();
+            ctrl.openSite(scope.currentSite);
           }
           else if(message === 'back') {
             console.log("Received back command");
-            ctrl.openSite(PackSessionService.getNextPage());
+            ctrl.openSite(PackSessionService.getCurrentPage());
             ctrl.pauseSession();
           }
           else if(message === 'pause') {
