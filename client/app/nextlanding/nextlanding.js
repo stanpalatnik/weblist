@@ -11,7 +11,7 @@ angular.module('weblistSavenub')
           loadPlugin: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               {
-                files: ['bower_components/tabex/dist/tabex.min.js']
+                files: ['bower_components/tabex/dist/tabex.min.js', 'bower_components/ui-comments/src/comments.js']
               }
             ]);
           }
@@ -39,7 +39,7 @@ angular.module('weblistSavenub')
           loadPlugin: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               {
-                files: ['bower_components/tabex/dist/tabex.min.js']
+                files: ['bower_components/tabex/dist/tabex.min.js', 'bower_components/ui-comments/src/comments.js']
               }
             ]);
           }

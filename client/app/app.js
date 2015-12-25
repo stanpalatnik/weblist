@@ -6,7 +6,8 @@ angular.module('weblistSavenub', [
   'ngSanitize',
   'ui.router',
   'validation.match',
-  'oc.lazyLoad'
+  'oc.lazyLoad',
+  'ui.comments'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $ocLazyLoadProvider) {
     $urlRouterProvider
@@ -14,6 +15,14 @@ angular.module('weblistSavenub', [
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
+  })
+  .config(function(commentsConfigProvider) {
+    commentsConfigProvider.set({
+      containerTemplate: 'components/templates/comments.html',
+      commentTemplate: 'components/templates/comment.html',
+      commentController: 'CommentCtrl',
+      depthLimit: 4
+    });
   })
 
   .factory('authInterceptor', function($rootScope, $q, $cookies, $injector) {
