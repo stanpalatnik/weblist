@@ -10,6 +10,7 @@ import path from 'path';
 module.exports = function(app) {
 
   // Insert routes below
+  app.use('/api/comments', require('./api/comment'));
   app.use('/api/packsessions', require('./api/packsession'));
   app.use('/api/packs', require('./api/pack'));
   app.use('/api/sites', require('./api/site'));
