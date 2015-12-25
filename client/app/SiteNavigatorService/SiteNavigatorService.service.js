@@ -30,7 +30,7 @@ angular.module('weblistSavenub')
                 redirectPrompt(pack, site, nextSite);
               }
               else {
-                redirectFinished(site);
+                redirectFinished(pack, site);
               }
             }
             else {

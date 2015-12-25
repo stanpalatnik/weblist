@@ -4,22 +4,27 @@ angular.module('weblistSavenub')
   .config(function ($stateProvider) {
     $stateProvider
       .state('nextlanding', {
-        url: '/nextlanding/:token',
+        abstract: true,
+        url: '/nextlanding',
+        template: '<ui-view/>'
+      })
+      .state('nextlanding.prompt', {
+        url: '/:token',
         templateUrl: 'app/nextlanding/nextlanding.html',
         controller: 'NextlandingCtrl',
         resolve: {
           loadPlugin: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               {
-                files: ['bower_components/tabex/dist/tabex.min.js', 'bower_components/ui-comments/src/comments.js']
+                files: ['bower_components/tabex/dist/tabex.min.js']
               }
             ]);
           }
         }
       })
       .state('nextlanding.notification', {
-        url: '/nextlanding/notification/:token',
-        templateUrl: 'app/nextlanding/notification.html',
+        url: '/notification/:token',
+        templateUrl: 'app/nextlanding/templates/notification.html',
         controller: 'NextlandingCtrl',
         resolve: {
           loadPlugin: function ($ocLazyLoad) {
@@ -32,14 +37,14 @@ angular.module('weblistSavenub')
         }
       })
       .state('nextlanding.last', {
-        url: '/nextlanding/last/:token',
+        url: '/last/:token',
         templateUrl: 'app/nextlanding/finished.html',
         controller: 'NextlandingCtrl',
         resolve: {
           loadPlugin: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               {
-                files: ['bower_components/tabex/dist/tabex.min.js', 'bower_components/ui-comments/src/comments.js']
+                files: ['bower_components/tabex/dist/tabex.min.js']
               }
             ]);
           }

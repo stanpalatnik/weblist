@@ -10,7 +10,7 @@ angular.module('weblistSavenub')
       var nextSite = PackSessionService.peakNextPage() || prevSite;
       return PackUtilService.grabToken(PackSessionService.getPack().id, prevSite, nextSite, function (token) {
         console.log("redirect notification token: " + token.token);
-        notificationWindow = window.open("/nextlanding/notification" + token.token, "", "width=200, height=100");
+        notificationWindow = window.open("/nextlanding/notification/" + token.token, "", "width=200, height=100");
         var intervalID = window.setInterval(function() {
           if(notificationWindow.closed) {
             clearInterval(intervalID);

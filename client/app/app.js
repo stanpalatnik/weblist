@@ -18,8 +18,8 @@ angular.module('weblistSavenub', [
   })
   .config(function(commentsConfigProvider) {
     commentsConfigProvider.set({
-      containerTemplate: 'components/templates/comments.html',
-      commentTemplate: 'components/templates/comment.html',
+      containerTemplate: 'components/comments/templates/comments.html',
+      commentTemplate: 'components/comments/templates/comment.html',
       commentController: 'CommentCtrl',
       depthLimit: 4
     });
