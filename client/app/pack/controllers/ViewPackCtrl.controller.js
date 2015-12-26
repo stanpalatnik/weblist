@@ -7,5 +7,6 @@ angular.module('weblistSavenub')
     }
     else {
       $scope.pack = Pack.get({id: $stateParams.packId});
+      $scope.geoPattern = GeoPattern.generate($scope.pack.id).toDataUrl();
     }
   });

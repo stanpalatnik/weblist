@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         User.hasOne(models.Pack, { foreignKey: {name: "UserId", allowNull: false }, onDelete: 'CASCADE'} );
+        User.hasOne(models.Comment, { foreignKey: {name: "UserId", allowNull: false }, onDelete: 'CASCADE'});
       },
       validEmail: validEmail,
       validPassword: validPassword
